@@ -203,6 +203,8 @@ floored its ease, and is reported as a leech.
 ## Building
 
 ```sh
+./gradlew apiCheck                      # the public ABI still matches api/
+./gradlew apiDump                       # ...update it when a change is intended
 ./gradlew :srs:jvmTest                  # the suite on the JVM
 ./gradlew :srs:iosSimulatorArm64Test    # the same suite on an iOS simulator
 ./gradlew :srs:jsNodeTest               # and on Node

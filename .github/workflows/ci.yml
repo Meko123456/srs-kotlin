@@ -30,6 +30,11 @@ jobs:
       # this library could plausibly differ per platform is Double rounding on an interval.
       # iosArm64 cannot run on a runner, so it is compiled, and assemble builds the Android artifact.
       # A target that is published but never built is the gap this line exists to close.
+      # First, because it is the cheapest failure to read: if the public ABI moved without the dump
+      # moving with it, that is the answer, and nothing else in this job needs to run to find out.
+      - name: Check the public API has not changed by accident
+        run: ./gradlew apiCheck --stacktrace
+
       - name: Test and build every target
         run: |
           ./gradlew :srs:jvmTest \
