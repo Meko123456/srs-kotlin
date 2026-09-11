@@ -26,6 +26,22 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    // Pure Kotlin with no dependencies and no expect/actual, so the browser targets cost nothing but
+    // a line each - and they are what makes this usable from a Kotlin/JS or Compose-for-Web review
+    // app rather than only from a phone.
+    // nodejs() only, no browser(): these declarations choose where this library's *own tests* run,
+    // not where consumers can use it - the published artifacts work in a browser either way. Browser
+    // test tasks drag in Yarn and a webpack bundle to serve a suite that touches no DOM and no
+    // network, which is machinery for nothing.
+    js(IR) {
+        nodejs()
+    }
+
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        nodejs()
+    }
+
     sourceSets {
         // commonMain deliberately declares no dependencies at all, not even kotlinx-datetime: dates
         // enter and leave as epoch-day Longs, so the algorithm stays pure arithmetic and the

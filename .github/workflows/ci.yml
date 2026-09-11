@@ -24,13 +24,18 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      # Every declared target is covered here: jvm and iosSimulatorArm64 actually run the suite,
-      # iosArm64 cannot run on a runner so it is compiled, and assemble builds the Android artifact.
+      # Every declared target is covered. The suite actually runs on four of them - the JVM, an iOS
+      # simulator, Node and Wasm - which between them cover three different compiler backends, and
+      # that is the point of the browser targets being tested rather than merely built: the one place
+      # this library could plausibly differ per platform is Double rounding on an interval.
+      # iosArm64 cannot run on a runner, so it is compiled, and assemble builds the Android artifact.
       # A target that is published but never built is the gap this line exists to close.
       - name: Test and build every target
         run: |
           ./gradlew :srs:jvmTest \
                     :srs:iosSimulatorArm64Test \
+                    :srs:jsNodeTest \
+                    :srs:wasmJsNodeTest \
                     :srs:compileKotlinIosArm64 \
                     :srs:assemble --stacktrace
 

@@ -36,7 +36,10 @@ dependencies {
 }
 ```
 
-Targets: **JVM**, **Android** (minSdk 21), **iosArm64**, **iosSimulatorArm64**.
+Targets: **JVM**, **Android** (minSdk 21), **iosArm64**, **iosSimulatorArm64**, **JS**, **WasmJS**.
+
+The test suite runs on four of them in CI — the JVM, an iOS simulator, Node and Wasm — which covers
+three different compiler backends.
 
 ## How SM-2 works
 
@@ -174,7 +177,9 @@ shuffling or deck order is yours to decide by ordering the input.
 ```sh
 ./gradlew :srs:jvmTest                  # the suite on the JVM
 ./gradlew :srs:iosSimulatorArm64Test    # the same suite on an iOS simulator
-./gradlew :srs:assemble                 # all four target artifacts
+./gradlew :srs:jsNodeTest               # and on Node
+./gradlew :srs:wasmJsNodeTest           # and on Wasm
+./gradlew :srs:assemble                 # every target artifact
 ```
 
 ## License
