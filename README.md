@@ -172,6 +172,34 @@ rather than producing silently wrong intervals later.
 Due ordering: never-seen items first, then longest overdue. Ties keep the order you passed in, so
 shuffling or deck order is yours to decide by ordering the input.
 
+## A worked example
+
+[`:sample`](sample/src/main/kotlin/Main.kt) runs a six-card deck through thirty days and prints what
+comes up each day, grading each card the way a learner roughly would. No clock: `today` is a counter,
+which is why the output is identical on every run.
+
+```sh
+./gradlew :sample:run
+```
+
+```
+day  8   3 due
+          წყალი — water          EASY  → next in 16 day(s)
+          სახლი — house          GOOD  → next in 16 day(s)
+          მეგობარი — friend      HARD  → next in  6 day(s)
+...
+After thirty days — 41 reviews in total:
+
+  card                   interval   lapses    ease
+  გამარჯობა — hello            38        0    2.56
+  წყალი — water                43        0    2.70
+  წიგნი — book                 12        2    1.36
+  მეგობარი — friend             1       11    1.30
+```
+
+The cards that came easily end up weeks apart; the one that was fought for is still at a day, has
+floored its ease, and is reported as a leech.
+
 ## Building
 
 ```sh

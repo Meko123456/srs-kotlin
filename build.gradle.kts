@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.kmp.library) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
 }
 
 // This project has zero npm dependencies, so Yarn never runs and never writes build/js/yarn.lock -

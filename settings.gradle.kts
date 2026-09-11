@@ -47,3 +47,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "srs-kotlin"
 include(":srs")
+include(":sample")

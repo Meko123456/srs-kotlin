@@ -39,6 +39,12 @@ jobs:
                     :srs:compileKotlinIosArm64 \
                     :srs:assemble --stacktrace
 
+      # Running the sample rather than just compiling it: it is the only place the library is used
+      # from outside its own source set, so it is what catches an API change that is awkward to call
+      # rather than merely wrong.
+      - name: Run the sample
+        run: ./gradlew :sample:run --stacktrace
+
       - name: Upload the test report when it fails
         if: failure()
         uses: actions/upload-artifact@v7
