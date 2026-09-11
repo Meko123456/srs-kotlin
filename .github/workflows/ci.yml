@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # macOS because the iOS targets need it, and running the suite on a second platform is most of
+    # the value of a multiplatform library being multiplatform.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # Every declared target is covered here: jvm and iosSimulatorArm64 actually run the suite,
+      # iosArm64 cannot run on a runner so it is compiled, and assemble builds the Android artifact.
+      # A target that is published but never built is the gap this line exists to close.
+      - name: Test and build every target
+        run: |
+          ./gradlew :srs:jvmTest \
+                    :srs:iosSimulatorArm64Test \
+                    :srs:compileKotlinIosArm64 \
+                    :srs:assemble --stacktrace
+
+      - name: Upload the test report when it fails
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-report
+          path: srs/build/reports/tests/

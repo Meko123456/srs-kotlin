@@ -1,0 +1,9 @@
+[versions]
+agp = "9.1.1"
+kotlin = "2.4.10"
+mavenPublish = "0.37.0"
+
+[plugins]
+android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }

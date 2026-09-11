@@ -1,0 +1,48 @@
+name: Publish to Maven Central
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # Five seconds of checking instead of four minutes of building, then "Could not read PGP
+      # secret key". A truncated or pasted-over signing secret is the failure that actually happens,
+      # and it is invisible until Gradle tries to sign — this says so up front, and says how to fix
+      # it. (markdown-blocks lost two publish runs and twelve days to exactly this.)
+      - name: Check the signing key before spending a build on it
+        env:
+          KEY: ${{ secrets.SIGNING_KEY }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          fail() { echo "::error::$1"; echo "Fix: ./scripts/set-signing-secrets.sh ${{ github.repository }}"; exit 1; }
+          [ -n "$CENTRAL_USERNAME" ] || fail "CENTRAL_USERNAME is not set on this repository."
+          [ -n "$SIGNING_PASSWORD" ] || fail "SIGNING_PASSWORD is not set on this repository."
+          [ -n "$KEY" ] || fail "SIGNING_KEY is not set on this repository."
+          printf '%s' "$KEY" | head -1 | grep -q -- '-----BEGIN PGP PRIVATE KEY BLOCK-----' \
+            || fail "SIGNING_KEY does not start with the PGP private key header. It is not an armored secret key export."
+          printf '%s' "$KEY" | grep -q -- '-----END PGP PRIVATE KEY BLOCK-----' \
+            || fail "SIGNING_KEY has no END line, so it was truncated on upload. Upload it from a file, never by pasting."
+          bytes=$(printf '%s' "$KEY" | wc -c | tr -d ' ')
+          [ "$bytes" -ge 1000 ] || fail "SIGNING_KEY is only $bytes bytes — far too short for a private key."
+          echo "Signing key looks complete: $bytes bytes."
+
+      - name: Publish
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache --stacktrace
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
