@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/Meko123456/srs-kotlin/actions/workflows/ci.yml/badge.svg)](https://github.com/Meko123456/srs-kotlin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![API docs](https://img.shields.io/badge/API-docs-blue.svg)](https://meko123456.github.io/srs-kotlin/)
 
 Spaced-repetition scheduling for Kotlin Multiplatform: a configurable, exhaustively tested **SM-2**
 implementation with **no dependencies**.
@@ -199,6 +200,14 @@ After thirty days — 41 reviews in total:
 
 The cards that came easily end up weeks apart; the one that was fought for is still at a day, has
 floored its ease, and is reported as a leech.
+
+## API docs
+
+Generated from the KDoc on every push to `main`: **<https://meko123456.github.io/srs-kotlin/>**
+
+```sh
+./gradlew :srs:dokkaGeneratePublicationHtml   # build them locally into srs/build/dokka/html
+```
 
 ## Building
 

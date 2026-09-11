@@ -1,0 +1,47 @@
+name: API docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# The three permissions Pages deployment needs, and no more.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time, and never cancel one half-done.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # Only the JVM and common source sets are needed to document a library whose whole API is in
+      # commonMain, so this does not need a macOS runner.
+      - name: Generate the docs
+        run: ./gradlew :srs:dokkaGeneratePublicationHtml --stacktrace
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: srs/build/dokka/html
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
