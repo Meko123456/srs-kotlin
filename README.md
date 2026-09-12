@@ -37,6 +37,11 @@ dependencies {
 }
 ```
 
+> **Not on Maven Central yet.** The release pipeline is wired and green, but `0.1.0` only publishes
+> once the signing key is in place — [#1](https://github.com/Meko123456/srs-kotlin/issues/1). Until
+> then that coordinate will not resolve; use `includeBuild("../srs-kotlin")` or
+> `./gradlew publishToMavenLocal`.
+
 Targets: **JVM**, **Android** (minSdk 21), **iosArm64**, **iosSimulatorArm64**, **JS**, **WasmJS**.
 
 The test suite runs on four of them in CI — the JVM, an iOS simulator, Node and Wasm — which covers
