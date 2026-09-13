@@ -41,6 +41,55 @@ final class <#A: kotlin/Any?> io.github.meko123456.srs/ReviewQueue { // io.githu
     final fun dueCount(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>, kotlin/Long): kotlin/Int // io.github.meko123456.srs/ReviewQueue.dueCount|dueCount(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>;kotlin.Long){}[0]
     final fun nextDueEpochDay(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>): kotlin/Long? // io.github.meko123456.srs/ReviewQueue.nextDueEpochDay|nextDueEpochDay(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>){}[0]
     final fun record(io.github.meko123456.srs/Review?, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/Review // io.github.meko123456.srs/ReviewQueue.record|record(io.github.meko123456.srs.Review?;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
+    final fun session(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>, kotlin/Long, io.github.meko123456.srs/DailyLimits = ...): io.github.meko123456.srs/StudySession<#A> // io.github.meko123456.srs/ReviewQueue.session|session(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>;kotlin.Long;io.github.meko123456.srs.DailyLimits){}[0]
+}
+
+final class <#A: kotlin/Any?> io.github.meko123456.srs/StudySession { // io.github.meko123456.srs/StudySession|null[0]
+    constructor <init>(kotlin.collections/List<#A>, kotlin/Int, kotlin/Int) // io.github.meko123456.srs/StudySession.<init>|<init>(kotlin.collections.List<1:0>;kotlin.Int;kotlin.Int){}[0]
+
+    final val available // io.github.meko123456.srs/StudySession.available|{}available[0]
+        final fun <get-available>(): kotlin/Int // io.github.meko123456.srs/StudySession.available.<get-available>|<get-available>(){}[0]
+    final val dueReviews // io.github.meko123456.srs/StudySession.dueReviews|{}dueReviews[0]
+        final fun <get-dueReviews>(): kotlin/Int // io.github.meko123456.srs/StudySession.dueReviews.<get-dueReviews>|<get-dueReviews>(){}[0]
+    final val isLimited // io.github.meko123456.srs/StudySession.isLimited|{}isLimited[0]
+        final fun <get-isLimited>(): kotlin/Boolean // io.github.meko123456.srs/StudySession.isLimited.<get-isLimited>|<get-isLimited>(){}[0]
+    final val items // io.github.meko123456.srs/StudySession.items|{}items[0]
+        final fun <get-items>(): kotlin.collections/List<#A> // io.github.meko123456.srs/StudySession.items.<get-items>|<get-items>(){}[0]
+    final val newItems // io.github.meko123456.srs/StudySession.newItems|{}newItems[0]
+        final fun <get-newItems>(): kotlin/Int // io.github.meko123456.srs/StudySession.newItems.<get-newItems>|<get-newItems>(){}[0]
+
+    final fun component1(): kotlin.collections/List<#A> // io.github.meko123456.srs/StudySession.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // io.github.meko123456.srs/StudySession.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // io.github.meko123456.srs/StudySession.component3|component3(){}[0]
+    final fun copy(kotlin.collections/List<#A> = ..., kotlin/Int = ..., kotlin/Int = ...): io.github.meko123456.srs/StudySession<#A> // io.github.meko123456.srs/StudySession.copy|copy(kotlin.collections.List<1:0>;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/StudySession.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/StudySession.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/StudySession.toString|toString(){}[0]
+}
+
+final class io.github.meko123456.srs/DailyLimits { // io.github.meko123456.srs/DailyLimits|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ...) // io.github.meko123456.srs/DailyLimits.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val maxNewItems // io.github.meko123456.srs/DailyLimits.maxNewItems|{}maxNewItems[0]
+        final fun <get-maxNewItems>(): kotlin/Int // io.github.meko123456.srs/DailyLimits.maxNewItems.<get-maxNewItems>|<get-maxNewItems>(){}[0]
+    final val maxReviews // io.github.meko123456.srs/DailyLimits.maxReviews|{}maxReviews[0]
+        final fun <get-maxReviews>(): kotlin/Int // io.github.meko123456.srs/DailyLimits.maxReviews.<get-maxReviews>|<get-maxReviews>(){}[0]
+
+    final fun component1(): kotlin/Int // io.github.meko123456.srs/DailyLimits.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // io.github.meko123456.srs/DailyLimits.component2|component2(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ...): io.github.meko123456.srs/DailyLimits // io.github.meko123456.srs/DailyLimits.copy|copy(kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/DailyLimits.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/DailyLimits.hashCode|hashCode(){}[0]
+    final fun remainingAfter(kotlin/Int, kotlin/Int): io.github.meko123456.srs/DailyLimits // io.github.meko123456.srs/DailyLimits.remainingAfter|remainingAfter(kotlin.Int;kotlin.Int){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/DailyLimits.toString|toString(){}[0]
+
+    final object Companion { // io.github.meko123456.srs/DailyLimits.Companion|null[0]
+        final const val UNLIMITED // io.github.meko123456.srs/DailyLimits.Companion.UNLIMITED|{}UNLIMITED[0]
+            final fun <get-UNLIMITED>(): kotlin/Int // io.github.meko123456.srs/DailyLimits.Companion.UNLIMITED.<get-UNLIMITED>|<get-UNLIMITED>(){}[0]
+
+        final val None // io.github.meko123456.srs/DailyLimits.Companion.None|{}None[0]
+            final fun <get-None>(): io.github.meko123456.srs/DailyLimits // io.github.meko123456.srs/DailyLimits.Companion.None.<get-None>|<get-None>(){}[0]
+    }
 }
 
 final class io.github.meko123456.srs/Review { // io.github.meko123456.srs/Review|null[0]

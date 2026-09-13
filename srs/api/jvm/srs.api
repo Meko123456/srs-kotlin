@@ -1,3 +1,25 @@
+public final class io/github/meko123456/srs/DailyLimits {
+	public static final field Companion Lio/github/meko123456/srs/DailyLimits$Companion;
+	public static final field UNLIMITED I
+	public fun <init> ()V
+	public fun <init> (II)V
+	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lio/github/meko123456/srs/DailyLimits;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/DailyLimits;IIILjava/lang/Object;)Lio/github/meko123456/srs/DailyLimits;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxNewItems ()I
+	public final fun getMaxReviews ()I
+	public fun hashCode ()I
+	public final fun remainingAfter (II)Lio/github/meko123456/srs/DailyLimits;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/meko123456/srs/DailyLimits$Companion {
+	public final fun getNone ()Lio/github/meko123456/srs/DailyLimits;
+}
+
 public final class io/github/meko123456/srs/Grade : java/lang/Enum {
 	public static final field AGAIN Lio/github/meko123456/srs/Grade;
 	public static final field Companion Lio/github/meko123456/srs/Grade$Companion;
@@ -37,6 +59,8 @@ public final class io/github/meko123456/srs/ReviewQueue {
 	public final fun dueCount (Ljava/util/List;Ljava/util/Map;J)I
 	public final fun nextDueEpochDay (Ljava/util/List;Ljava/util/Map;)Ljava/lang/Long;
 	public final fun record (Lio/github/meko123456/srs/Review;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/Review;
+	public final fun session (Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;)Lio/github/meko123456/srs/StudySession;
+	public static synthetic fun session$default (Lio/github/meko123456/srs/ReviewQueue;Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;ILjava/lang/Object;)Lio/github/meko123456/srs/StudySession;
 }
 
 public final class io/github/meko123456/srs/ReviewState {
@@ -122,5 +146,22 @@ public final class io/github/meko123456/srs/Sm2Config {
 
 public final class io/github/meko123456/srs/Sm2Config$Companion {
 	public final fun getDefault ()Lio/github/meko123456/srs/Sm2Config;
+}
+
+public final class io/github/meko123456/srs/StudySession {
+	public fun <init> (Ljava/util/List;II)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (Ljava/util/List;II)Lio/github/meko123456/srs/StudySession;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/StudySession;Ljava/util/List;IIILjava/lang/Object;)Lio/github/meko123456/srs/StudySession;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAvailable ()I
+	public final fun getDueReviews ()I
+	public final fun getItems ()Ljava/util/List;
+	public final fun getNewItems ()I
+	public fun hashCode ()I
+	public final fun isLimited ()Z
+	public fun toString ()Ljava/lang/String;
 }
 

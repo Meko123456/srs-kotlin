@@ -114,6 +114,35 @@ val sm2 = Sm2(
 | `lapseIntervalDays` | 1 | Where a failure sends the item |
 | `leechThreshold` | 8 | Lapses before `isLeech` reports true |
 
+## Capping the day
+
+Come back after a week away to four hundred due cards and the honest move is to close the app. Daily
+limits are what keep a backlog survivable:
+
+```kotlin
+val session = queue.session(
+    cards, reviews, today,
+    limits = DailyLimits(maxReviews = 100, maxNewItems = 20)
+        .remainingAfter(reviewsDoneToday, newDoneToday),
+)
+
+session.items                                   // what to study now, ordered and capped
+"${session.items.size} of ${session.available}" // "20 of 143"
+session.isLimited                               // whether anything was held back
+```
+
+Reviews and new items have **separate budgets**, because they fail differently: skipping a review
+means forgetting something already learned, while skipping a new item means learning it tomorrow
+instead. A wall of due reviews therefore never stops new material appearing, and a large import never
+pushes out the reviews that are the reason the app works. Within the review budget the **most
+overdue survive** — dropping those would mean dropping exactly the items closest to being forgotten.
+
+`remainingAfter` exists because the library cannot know what you studied before it was asked, and
+because the two easy ways to get that subtraction wrong are both handled: `UNLIMITED` stays unlimited
+rather than becoming a large limit that shrinks all day, and the result never goes negative.
+
+`due()` is simply `session()` with no limits.
+
 ## Leeches
 
 An item that keeps being forgotten is usually better rewritten than re-reviewed — SM-2's own advice.
@@ -174,6 +203,8 @@ rather than producing silently wrong intervals later.
 | `Scheduler` | The algorithm interface |
 | `Sm2` / `Sm2Config` | SM-2 and its knobs |
 | `ReviewQueue` | Due selection, ordering, counts, and recording a result |
+| `DailyLimits` | Per-day caps on reviews and new items, with the headroom arithmetic |
+| `StudySession` | What to study now, plus what was available before the cap |
 
 Due ordering: never-seen items first, then longest overdue. Ties keep the order you passed in, so
 shuffling or deck order is yours to decide by ordering the input.
