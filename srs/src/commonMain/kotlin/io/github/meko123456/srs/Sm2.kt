@@ -35,7 +35,13 @@ public class Sm2(
 ) : Scheduler {
 
     override fun schedule(state: ReviewState, grade: Grade): ReviewState {
-        val ease = nextEaseFactor(state.easeFactor, grade)
+        // Where [Sm2Config.initialEase] takes effect. A never-reviewed item has not earned an ease
+        // yet — the field on a fresh [ReviewState] is only the data class default — so the configured
+        // starting value applies to it. A *lapsed* item is deliberately not caught by this: its
+        // interval is the lapse interval rather than zero, so it is not new, and it keeps the lower
+        // ease it earned rather than being handed a fresh one on every failure.
+        val startingEase = if (state.isNew) config.initialEase else state.easeFactor
+        val ease = nextEaseFactor(startingEase, grade)
 
         if (!grade.isPass) {
             // A lapse keeps the (now lower) ease but throws away the streak: the item has to earn

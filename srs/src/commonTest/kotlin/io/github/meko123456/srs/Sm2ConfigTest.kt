@@ -68,6 +68,42 @@ class Sm2ConfigTest {
     }
 
     @Test
+    fun `a configured starting ease is what a new item begins from`() {
+        val hard = Sm2(Sm2Config(initialEase = 1.8))
+        // GOOD leaves the ease where it is, so the first review exposes the starting value.
+        assertEquals(1.8, hard.schedule(fresh, Grade.GOOD).easeFactor, 1e-9)
+        // EASY moves it up from there rather than from the library default.
+        assertEquals(1.9, hard.schedule(fresh, Grade.EASY).easeFactor, 1e-9)
+        // ...and the default config still starts where SM-2 says.
+        assertEquals(ReviewState.DEFAULT_EASE, Sm2().schedule(fresh, Grade.GOOD).easeFactor, 1e-9)
+    }
+
+    @Test
+    fun `a configured starting ease changes the intervals that follow`() {
+        val hard = Sm2(Sm2Config(initialEase = 1.8))
+        var state = fresh
+        repeat(3) { state = hard.schedule(state, Grade.GOOD) }
+        // Six days times 1.8 rather than times 2.5.
+        assertEquals(11L, state.intervalDays)
+        assertEquals(15L, Sm2().run(Grade.GOOD, Grade.GOOD, Grade.GOOD).intervalDays)
+    }
+
+    @Test
+    fun `a lapsed item keeps the ease it earned rather than starting over`() {
+        val hard = Sm2(Sm2Config(initialEase = 2.4))
+        var state = hard.schedule(fresh, Grade.GOOD)
+        state = hard.schedule(state, Grade.AGAIN)
+        val afterLapse = state.easeFactor
+        assertTrue(afterLapse < 2.4, "the lapse should have lowered the ease, was $afterLapse")
+
+        // The item is no longer new - its interval is the lapse interval, not zero - so the next
+        // review continues from the lowered ease instead of being handed the starting one again.
+        assertFalse(state.isNew)
+        state = hard.schedule(state, Grade.GOOD)
+        assertEquals(afterLapse, state.easeFactor, 1e-9)
+    }
+
+    @Test
     fun `a raised ease floor keeps hard items from collapsing`() {
         val sm2 = Sm2(Sm2Config(minEase = 2.0))
         var state = fresh
