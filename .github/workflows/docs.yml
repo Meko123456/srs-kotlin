@@ -37,7 +37,7 @@ jobs:
       - name: Generate the docs
         run: ./gradlew :srs:dokkaGeneratePublicationHtml --stacktrace
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       - uses: actions/upload-pages-artifact@v3
         with:
