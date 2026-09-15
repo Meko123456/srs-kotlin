@@ -37,10 +37,12 @@ dependencies {
 }
 ```
 
-> **Not on Maven Central yet.** The release pipeline is wired and green, but `0.1.0` only publishes
-> once the signing key is in place — [#1](https://github.com/Meko123456/srs-kotlin/issues/1). Until
-> then that coordinate will not resolve; use `includeBuild("../srs-kotlin")` or
-> `./gradlew publishToMavenLocal`.
+> **Not on Maven Central yet.** The release pipeline is wired but has never completed a run — `0.1.0`
+> is still blocked on the Maven Central signing key
+> ([#1](https://github.com/Meko123456/srs-kotlin/issues/1)) — so the coordinate above does not
+> resolve today. Until it does, build from source: clone the repo and either add
+> `includeBuild("../srs-kotlin")` to your `settings.gradle.kts`, or run
+> `./gradlew publishToMavenLocal` and add `mavenLocal()` to your repositories.
 
 Targets: **JVM**, **Android** (minSdk 21), **iosArm64**, **iosSimulatorArm64**, **JS**, **WasmJS**.
 
