@@ -36,6 +36,27 @@ public data class Sm2Config(
     /** Interval an item drops to after a lapse. */
     public val lapseIntervalDays: Long = 1,
     /**
+     * How far an interval may be moved to stop items clumping, as a fraction of that interval.
+     *
+     * Zero by default, which is textbook SM-2 and what keeps this a drop-in for a hand-rolled
+     * implementation. Anki uses roughly 0.05.
+     *
+     * The problem it solves: study fifty new cards in one sitting and SM-2 schedules all fifty for
+     * the same day, then the same day after that, forever. The clump never disperses on its own,
+     * because every card in it follows the same arithmetic. Anyone who adds material in batches —
+     * a chapter, a deck, a week of vocabulary — builds these by accident.
+     *
+     * The spread is **deterministic**, derived from the `itemSeed` passed to [Scheduler.schedule],
+     * never from a random number generator. Same item, same answer, every run and every device;
+     * two items that started together drift apart and stay apart.
+     *
+     * A percentage alone would do nothing to short intervals — five percent of six days rounds
+     * back to six days — so the spread is at least one day whenever it applies at all. It applies
+     * only to intervals of two days or more: an item due tomorrow is due tomorrow, and there is
+     * nowhere for it to move that is not today.
+     */
+    public val fuzzFactor: Double = 0.0,
+    /**
      * Lapses at which an item is considered a leech — one that keeps being forgotten and is usually
      * better rewritten than re-reviewed. Reported by [Sm2.isLeech]; the library never acts on it.
      */
@@ -51,6 +72,8 @@ public data class Sm2Config(
         require(maxIntervalDays >= 1) { "maxIntervalDays must be at least 1, was $maxIntervalDays" }
         require(intervalModifier > 0) { "intervalModifier must be positive, was $intervalModifier" }
         require(leechThreshold >= 1) { "leechThreshold must be at least 1, was $leechThreshold" }
+        require(fuzzFactor >= 0.0) { "fuzzFactor must not be negative, was $fuzzFactor" }
+        require(fuzzFactor < 1.0) { "fuzzFactor must be below 1.0, was $fuzzFactor" }
     }
 
     public companion object {

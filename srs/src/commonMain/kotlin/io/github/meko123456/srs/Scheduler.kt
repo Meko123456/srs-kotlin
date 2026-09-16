@@ -20,8 +20,30 @@ package io.github.meko123456.srs
  */
 public interface Scheduler {
 
-    /** The item's state after grading a review as [grade]. */
-    public fun schedule(state: ReviewState, grade: Grade): ReviewState
+    public companion object {
+        /**
+         * The seed that means "schedule this item exactly, without spreading it".
+         *
+         * Also the default, so a caller who never asks for spreading gets textbook behaviour and a
+         * caller who turns spreading on but forgets to pass a seed gets textbook behaviour too —
+         * rather than every item in the collection being shifted by the same amount, which looks
+         * like it is working and disperses nothing.
+         */
+        public const val NO_SEED: Long = 0L
+    }
+
+    /**
+     * The item's state after grading a review as [grade].
+     *
+     * [itemSeed] identifies *which* item this is, for schedulers that spread intervals so that
+     * everything studied on one day does not come back on one day. It must be stable for an item
+     * and different between items; [ItemSeed] derives one from a string or a row id. Leave it out,
+     * or pass [NO_SEED], and no spreading is applied.
+     *
+     * The seed is only ever used to pick a fixed offset. Same state, same grade and same seed
+     * always give the same answer, so this stays a pure function and stays testable.
+     */
+    public fun schedule(state: ReviewState, grade: Grade, itemSeed: Long = NO_SEED): ReviewState
 
     /** The epoch day an item last reviewed on [lastReviewedEpochDay] next comes up. */
     public fun dueEpochDay(state: ReviewState, lastReviewedEpochDay: Long): Long

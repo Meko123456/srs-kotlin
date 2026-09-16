@@ -30,8 +30,13 @@ final enum class io.github.meko123456.srs/Grade : kotlin/Enum<io.github.meko1234
 
 abstract interface io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Scheduler|null[0]
     abstract fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Scheduler.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
-    abstract fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Scheduler.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade){}[0]
+    abstract fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long = ...): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Scheduler.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
     open fun isDue(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isDue|isDue(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
+
+    final object Companion { // io.github.meko123456.srs/Scheduler.Companion|null[0]
+        final const val NO_SEED // io.github.meko123456.srs/Scheduler.Companion.NO_SEED|{}NO_SEED[0]
+            final fun <get-NO_SEED>(): kotlin/Long // io.github.meko123456.srs/Scheduler.Companion.NO_SEED.<get-NO_SEED>|<get-NO_SEED>(){}[0]
+    }
 }
 
 final class <#A: kotlin/Any?> io.github.meko123456.srs/ReviewQueue { // io.github.meko123456.srs/ReviewQueue|null[0]
@@ -145,20 +150,22 @@ final class io.github.meko123456.srs/Sm2 : io.github.meko123456.srs/Scheduler { 
 
     final fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Sm2.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
     final fun isLeech(io.github.meko123456.srs/ReviewState): kotlin/Boolean // io.github.meko123456.srs/Sm2.isLeech|isLeech(io.github.meko123456.srs.ReviewState){}[0]
-    final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade){}[0]
+    final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
 
     final object Default : io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Sm2.Default|null[0]
         final fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Sm2.Default.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
         final fun isDue(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Sm2.Default.isDue|isDue(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
-        final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade){}[0]
+        final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
     }
 }
 
 final class io.github.meko123456.srs/Sm2Config { // io.github.meko123456.srs/Sm2Config|null[0]
-    constructor <init>(kotlin/Double = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Int = ...) // io.github.meko123456.srs/Sm2Config.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Long;kotlin.Long;kotlin.Long;kotlin.Double;kotlin.Long;kotlin.Int){}[0]
+    constructor <init>(kotlin/Double = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Int = ...) // io.github.meko123456.srs/Sm2Config.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Long;kotlin.Long;kotlin.Long;kotlin.Double;kotlin.Long;kotlin.Double;kotlin.Int){}[0]
 
     final val firstIntervalDays // io.github.meko123456.srs/Sm2Config.firstIntervalDays|{}firstIntervalDays[0]
         final fun <get-firstIntervalDays>(): kotlin/Long // io.github.meko123456.srs/Sm2Config.firstIntervalDays.<get-firstIntervalDays>|<get-firstIntervalDays>(){}[0]
+    final val fuzzFactor // io.github.meko123456.srs/Sm2Config.fuzzFactor|{}fuzzFactor[0]
+        final fun <get-fuzzFactor>(): kotlin/Double // io.github.meko123456.srs/Sm2Config.fuzzFactor.<get-fuzzFactor>|<get-fuzzFactor>(){}[0]
     final val initialEase // io.github.meko123456.srs/Sm2Config.initialEase|{}initialEase[0]
         final fun <get-initialEase>(): kotlin/Double // io.github.meko123456.srs/Sm2Config.initialEase.<get-initialEase>|<get-initialEase>(){}[0]
     final val intervalModifier // io.github.meko123456.srs/Sm2Config.intervalModifier|{}intervalModifier[0]
@@ -181,8 +188,9 @@ final class io.github.meko123456.srs/Sm2Config { // io.github.meko123456.srs/Sm2
     final fun component5(): kotlin/Long // io.github.meko123456.srs/Sm2Config.component5|component5(){}[0]
     final fun component6(): kotlin/Double // io.github.meko123456.srs/Sm2Config.component6|component6(){}[0]
     final fun component7(): kotlin/Long // io.github.meko123456.srs/Sm2Config.component7|component7(){}[0]
-    final fun component8(): kotlin/Int // io.github.meko123456.srs/Sm2Config.component8|component8(){}[0]
-    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Int = ...): io.github.meko123456.srs/Sm2Config // io.github.meko123456.srs/Sm2Config.copy|copy(kotlin.Double;kotlin.Double;kotlin.Long;kotlin.Long;kotlin.Long;kotlin.Double;kotlin.Long;kotlin.Int){}[0]
+    final fun component8(): kotlin/Double // io.github.meko123456.srs/Sm2Config.component8|component8(){}[0]
+    final fun component9(): kotlin/Int // io.github.meko123456.srs/Sm2Config.component9|component9(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Int = ...): io.github.meko123456.srs/Sm2Config // io.github.meko123456.srs/Sm2Config.copy|copy(kotlin.Double;kotlin.Double;kotlin.Long;kotlin.Long;kotlin.Long;kotlin.Double;kotlin.Long;kotlin.Double;kotlin.Int){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/Sm2Config.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // io.github.meko123456.srs/Sm2Config.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // io.github.meko123456.srs/Sm2Config.toString|toString(){}[0]
@@ -191,4 +199,9 @@ final class io.github.meko123456.srs/Sm2Config { // io.github.meko123456.srs/Sm2
         final val Default // io.github.meko123456.srs/Sm2Config.Companion.Default|{}Default[0]
             final fun <get-Default>(): io.github.meko123456.srs/Sm2Config // io.github.meko123456.srs/Sm2Config.Companion.Default.<get-Default>|<get-Default>(){}[0]
     }
+}
+
+final object io.github.meko123456.srs/ItemSeed { // io.github.meko123456.srs/ItemSeed|null[0]
+    final fun of(kotlin/Long): kotlin/Long // io.github.meko123456.srs/ItemSeed.of|of(kotlin.Long){}[0]
+    final fun of(kotlin/String): kotlin/Long // io.github.meko123456.srs/ItemSeed.of|of(kotlin.String){}[0]
 }

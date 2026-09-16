@@ -34,7 +34,7 @@ public class Sm2(
     public val config: Sm2Config = Sm2Config.Default,
 ) : Scheduler {
 
-    override fun schedule(state: ReviewState, grade: Grade): ReviewState {
+    override fun schedule(state: ReviewState, grade: Grade, itemSeed: Long): ReviewState {
         // Where [Sm2Config.initialEase] takes effect. A never-reviewed item has not earned an ease
         // yet — the field on a fresh [ReviewState] is only the data class default — so the configured
         // starting value applies to it. A *lapsed* item is deliberately not caught by this: its
@@ -66,9 +66,51 @@ public class Sm2(
             // Never below one day: two reviews of the same item on one day teach nothing, and a
             // modifier under 1.0 could otherwise round a short interval down to zero and wedge the
             // item permanently in today's queue.
-            intervalDays = interval.roundToLong().coerceIn(1L, config.maxIntervalDays),
+            intervalDays = spread(interval.roundToLong(), itemSeed).coerceIn(1L, config.maxIntervalDays),
             easeFactor = ease,
         )
+    }
+
+    /**
+     * Moves [interval] a fixed, item-specific amount so that items scheduled together stop arriving
+     * together. See [Sm2Config.fuzzFactor] for why this exists.
+     *
+     * Returns [interval] untouched unless spreading is switched on, a real seed was given, and the
+     * interval is long enough to have somewhere to move to.
+     */
+    private fun spread(interval: Long, itemSeed: Long): Long {
+        if (config.fuzzFactor <= 0.0) return interval
+        if (itemSeed == Scheduler.NO_SEED) return interval
+        if (interval < MIN_SPREADABLE_DAYS) return interval
+
+        // At least a day, or a percentage of a short interval rounds away to nothing.
+        val reach = (interval * config.fuzzFactor).roundToLong().coerceAtLeast(1L)
+        val offset = offsetFor(itemSeed, interval, reach)
+        // Never back to one day: an item that has earned a real interval should not be dropped into
+        // tomorrow's pile, which is where the failures live.
+        return (interval + offset).coerceAtLeast(MIN_SPREADABLE_DAYS)
+    }
+
+    /**
+     * A stable offset in `-reach..reach` for this item at this interval.
+     *
+     * The interval is mixed in as well as the seed so an item does not take the same direction at
+     * every review, which would leave it permanently early or permanently late rather than merely
+     * out of step with its batch.
+     *
+     * The mixing is SplitMix64's finaliser. It is here because the obvious alternative — using the
+     * seed directly — correlates badly with the database row ids people will actually pass: ids
+     * 1, 2 and 3 would take near-identical offsets and the clump would survive.
+     */
+    private fun offsetFor(itemSeed: Long, interval: Long, reach: Long): Long {
+        var z = itemSeed * -7046029254386353131L + interval * -4658895280553007687L
+        z = (z xor (z ushr 30)) * -4658895280553007687L
+        z = (z xor (z ushr 27)) * -7723592293110705685L
+        z = z xor (z ushr 31)
+        val width = 2 * reach + 1
+        // `mod`, not `%`: the remainder operator keeps the sign of the dividend, so half the seeds
+        // would fold onto the same offsets and the spread would be lopsided.
+        return z.mod(width) - reach
     }
 
     override fun dueEpochDay(state: ReviewState, lastReviewedEpochDay: Long): Long =
@@ -97,5 +139,11 @@ public class Sm2(
     }
 
     /** Textbook SM-2, ready to use without constructing anything. */
-    public companion object Default : Scheduler by Sm2(Sm2Config.Default)
+    public companion object Default : Scheduler by Sm2(Sm2Config.Default) {
+        /**
+         * Shortest interval [Sm2Config.fuzzFactor] will move. An item due tomorrow has nowhere to
+         * go that is not today.
+         */
+        private const val MIN_SPREADABLE_DAYS: Long = 2
+    }
 }
