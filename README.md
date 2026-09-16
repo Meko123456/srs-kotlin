@@ -115,6 +115,42 @@ val sm2 = Sm2(
 | `intervalModifier` | 1.0 | Global scale on computed intervals |
 | `lapseIntervalDays` | 1 | Where a failure sends the item |
 | `leechThreshold` | 8 | Lapses before `isLeech` reports true |
+| `fuzzFactor` | 0.0 | How far intervals may be spread, so batches stop clumping |
+
+## Stopping batches from clumping
+
+Study fifty new cards in one sitting and SM-2 schedules all fifty for the same day, then the same day
+after that, for ever. Every card in the batch follows identical arithmetic, so the clump never
+disperses on its own. Anyone who adds material a chapter or a deck at a time builds these by accident.
+
+Turn on `fuzzFactor` and pass a per-item seed:
+
+```kotlin
+val sm2 = Sm2(Sm2Config(fuzzFactor = 0.05))
+
+state = sm2.schedule(state, Grade.GOOD, ItemSeed.of(card.id))
+```
+
+The spread is **deterministic**, never random: it is derived from the seed, so the same item gets the
+same answer on every run and on every device. Two cards that started together drift apart and stay
+apart, and the library keeps its promise that the same inputs give the same outputs.
+
+`ItemSeed.of` takes a `String` or a `Long`. Prefer it to passing a row id straight in — ids usually
+start at zero, and zero is `Scheduler.NO_SEED`, which means "do not spread this one".
+
+Three details worth knowing:
+
+- **A percentage alone would do nothing to short intervals** — five percent of six days rounds back
+  to six days — so the spread reaches at least one day whenever it applies. At 15 days and 5% that
+  is 14–16; at 100 days it is 95–105.
+- **Intervals under two days are never moved.** An item due tomorrow has nowhere to go that is not
+  today, and today is where the failures live. An interval that has been earned is never pushed back
+  down to one day either.
+- **Leave the seed out and nothing is spread.** So does passing `Scheduler.NO_SEED`. Turning fuzz on
+  and forgetting the seed gives you textbook behaviour rather than shifting every card by an
+  identical amount, which would look like it was working and disperse nothing.
+
+`fuzzFactor` is `0.0` by default, so `Sm2Config()` is still textbook SM-2 exactly.
 
 ## Capping the day
 
@@ -204,6 +240,7 @@ rather than producing silently wrong intervals later.
 | `Review` | A `ReviewState` plus the epoch day it was last seen |
 | `Scheduler` | The algorithm interface |
 | `Sm2` / `Sm2Config` | SM-2 and its knobs |
+| `ItemSeed` | Turns an item id into the stable seed interval spreading uses |
 | `ReviewQueue` | Due selection, ordering, counts, and recording a result |
 | `DailyLimits` | Per-day caps on reviews and new items, with the headroom arithmetic |
 | `StudySession` | What to study now, plus what was available before the cap |
