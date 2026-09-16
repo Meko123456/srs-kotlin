@@ -24,10 +24,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-        // The Kotlin/JS and Wasm toolchains fetch a Node runtime to run tests on, and would
-        // otherwise add this repository themselves at project level - which FAIL_ON_PROJECT_REPOS
-        // rejects. Declaring it here keeps the strict mode instead of trading it for the browser
-        // targets. Scoped to org.nodejs:node so it is never consulted for anything else.
+        // The Node runtime the tests run on, declared here so the version in use is visible in the
+        // repository list rather than only inside the plugin. Note this does *not* buy back the
+        // strict mode: FAIL_ON_PROJECT_REPOS rejects the plugin's own copy by name whatever is
+        // declared here, which is why the mode above is PREFER_SETTINGS. Scoped to org.nodejs:node
+        // so it is never consulted for anything else.
         ivy("https://nodejs.org/dist/") {
             name = "Node.js distributions"
             patternLayout { artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]") }
