@@ -130,6 +130,42 @@ class IntervalSpreadTest {
     }
 
     @Test
+    fun theQueueSeedsSpreadingWithoutBeingAsked() {
+        // The integration that makes the feature reachable. ReviewQueue already knows how to
+        // identify an item, so requiring the caller to derive a seed as well would be a parameter
+        // that exists only to be forgotten — and forgetting it is silent, because a missing seed
+        // just means no spreading.
+        data class Card(val id: String)
+
+        val queue = ReviewQueue(Card::id, Sm2(Sm2Config(fuzzFactor = 0.05)))
+        val cards = (1..50).map { Card("card-$it") }
+
+        // Three passes each, so every card reaches a computed interval rather than a fixed one.
+        val intervals = cards.map { card ->
+            var review = queue.record(card, null, Grade.GOOD, todayEpochDay = 0)
+            review = queue.record(card, review, Grade.GOOD, todayEpochDay = 1)
+            review = queue.record(card, review, Grade.GOOD, todayEpochDay = 7)
+            review.state.intervalDays
+        }
+
+        assertTrue(intervals.toSet().size >= 3, "the queue scheduled all fifty alike: ${intervals.toSet()}")
+    }
+
+    @Test
+    fun theQueueIsUnaffectedWhenSpreadingIsOff() {
+        data class Card(val id: String)
+
+        val queue = ReviewQueue(Card::id, Sm2())
+        val intervals = (1..10).map { n ->
+            val card = Card("card-$n")
+            var review = queue.record(card, null, Grade.GOOD, todayEpochDay = 0)
+            review = queue.record(card, review, Grade.GOOD, todayEpochDay = 1)
+            review.state.intervalDays
+        }
+        assertEquals(setOf(6L), intervals.toSet())
+    }
+
+    @Test
     fun aNegativeFuzzFactorIsRejected() {
         val failure = runCatching { Sm2Config(fuzzFactor = -0.1) }.exceptionOrNull()
         assertTrue(failure is IllegalArgumentException, "expected a rejection, got $failure")

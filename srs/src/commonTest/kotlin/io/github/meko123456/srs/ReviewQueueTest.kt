@@ -86,7 +86,7 @@ class ReviewQueueTest {
 
     @Test
     fun `recording a review stamps the day it happened`() {
-        val recorded = queue.record(review = null, grade = Grade.GOOD, todayEpochDay = 200)
+        val recorded = queue.record(item = Card("a"), review = null, grade = Grade.GOOD, todayEpochDay = 200)
         assertEquals(200L, recorded.lastReviewedEpochDay)
         assertEquals(1, recorded.state.repetitions)
         assertEquals(1L, recorded.state.intervalDays)
@@ -94,8 +94,8 @@ class ReviewQueueTest {
 
     @Test
     fun `recording carries the previous state forward`() {
-        var record = queue.record(null, Grade.GOOD, todayEpochDay = 200)
-        record = queue.record(record, Grade.GOOD, todayEpochDay = 201)
+        var record = queue.record(Card("a"), null, Grade.GOOD, todayEpochDay = 200)
+        record = queue.record(Card("a"), record, Grade.GOOD, todayEpochDay = 201)
         assertEquals(2, record.state.repetitions)
         assertEquals(6L, record.state.intervalDays)
         assertEquals(201L, record.lastReviewedEpochDay)
@@ -104,7 +104,7 @@ class ReviewQueueTest {
     @Test
     fun `a recorded item leaves the queue and comes back on its due day`() {
         val today = 200L
-        val record = queue.record(null, Grade.GOOD, today) // interval 1
+        val record = queue.record(Card("a"), null, Grade.GOOD, today) // interval 1
         val reviews = mapOf("a" to record)
         assertEquals(listOf(b, c), queue.due(cards, reviews, today))
         assertTrue(queue.due(cards, reviews, today + 1).contains(a))
@@ -113,7 +113,7 @@ class ReviewQueueTest {
     @Test
     fun `the queue honours the scheduler it was given`() {
         val slow = ReviewQueue(Card::id, Sm2(Sm2Config(firstIntervalDays = 30)))
-        val record = slow.record(null, Grade.GOOD, todayEpochDay = 0)
+        val record = slow.record(Card("a"), null, Grade.GOOD, todayEpochDay = 0)
         assertEquals(30L, record.state.intervalDays)
         assertEquals(30L, slow.nextDueEpochDay(listOf(a), mapOf("a" to record)))
     }

@@ -119,16 +119,25 @@ public class ReviewQueue<T>(
         .minOrNull()
 
     /**
-     * The record to store after grading an item on [todayEpochDay].
+     * The record to store after grading [item] on [todayEpochDay].
      *
      * Pass the item's existing [Review], or `null` if it has never been reviewed.
+     *
+     * [item] is here rather than only its [Review] so the queue can seed interval spreading itself,
+     * from the same [idOf] it already uses to key the map. Without it the caller would have to
+     * remember to derive a seed and pass it on every call — and forgetting is silent, because a
+     * missing seed simply means no spreading. Anything that can be derived should not be a
+     * parameter somebody has to remember.
+     *
+     * Costs nothing when [Sm2Config.fuzzFactor] is left at zero, which is the default.
      */
     public fun record(
+        item: T,
         review: Review?,
         grade: Grade,
         todayEpochDay: Long,
     ): Review = Review(
-        state = scheduler.schedule(review?.state ?: ReviewState(), grade),
+        state = scheduler.schedule(review?.state ?: ReviewState(), grade, ItemSeed.of(idOf(item))),
         lastReviewedEpochDay = todayEpochDay,
     )
 

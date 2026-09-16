@@ -77,7 +77,7 @@ public fun main() {
         for (card in due.take(4)) {
             val existing = reviews[card.id]
             val grade = learner.grade(card, existing?.state?.repetitions ?: 0, seed = (day * 31 + card.id.hashCode()).toInt())
-            val updated = queue.record(existing, grade, day)
+            val updated = queue.record(card, existing, grade, day)
             reviews = reviews + (card.id to updated)
             studied++
 

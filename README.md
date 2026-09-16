@@ -15,7 +15,7 @@ no date library, no UI.
 val queue = ReviewQueue(Card::id)
 
 val toStudy = queue.due(cards, reviews, today)                    // what to show
-val updated = queue.record(reviews[card.id], Grade.GOOD, today)   // what to store
+val updated = queue.record(card, reviews[card.id], Grade.GOOD, today)   // what to store
 ```
 
 ## Why this exists

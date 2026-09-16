@@ -144,7 +144,7 @@ public final class io/github/meko123456/srs/ReviewQueue {
 	public final fun due (Ljava/util/List;Ljava/util/Map;J)Ljava/util/List;
 	public final fun dueCount (Ljava/util/List;Ljava/util/Map;J)I
 	public final fun nextDueEpochDay (Ljava/util/List;Ljava/util/Map;)Ljava/lang/Long;
-	public final fun record (Lio/github/meko123456/srs/Review;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/Review;
+	public final fun record (Ljava/lang/Object;Lio/github/meko123456/srs/Review;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/Review;
 	public final fun session (Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;)Lio/github/meko123456/srs/StudySession;
 	public static synthetic fun session$default (Lio/github/meko123456/srs/ReviewQueue;Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;ILjava/lang/Object;)Lio/github/meko123456/srs/StudySession;
 }
