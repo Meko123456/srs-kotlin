@@ -152,6 +152,46 @@ Three details worth knowing:
 
 `fuzzFactor` is `0.0` by default, so `Sm2Config()` is still textbook SM-2 exactly.
 
+## Learning steps
+
+Textbook SM-2 sends a brand-new item straight to a one-day interval: you see something for the first
+time, then not again until tomorrow, with nothing in between to say whether it stuck. Anki runs new
+material through short steps first — a minute, then ten — and only hands it to the algorithm once it
+has survived them. That is a large part of why it feels better on new material.
+
+`LearningQueue` is that phase, and it sits **in front of** the scheduler rather than inside it:
+
+```kotlin
+val learning = LearningQueue.Default          // one minute, then ten
+
+when (val outcome = learning.review(item.learning, grade)) {
+    is LearningOutcome.StillLearning -> showAgainIn(outcome.inMinutes)
+    LearningOutcome.Graduated        -> item.review = Sm2.schedule(ReviewState(), grade)
+}
+```
+
+Separate types on purpose. Graduating is a different problem from spacing: it happens over minutes,
+it asks whether something stuck at all, and it is over within the session. Spacing happens over days
+and keeps what has already stuck. Merging them would have meant widening the scheduler's time unit
+from epoch days to something finer, and every caller would have paid for a phase that ends within
+the hour.
+
+| Grade | What it does |
+|---|---|
+| `AGAIN` | Back to the first step — not back one, so a failure cannot be undone by one right answer |
+| `HARD` | Repeats the current step; barely remembering is not evidence |
+| `GOOD` | Advances one step, graduating if that was the last |
+| `EASY` | Graduates immediately, unless you turn that off |
+
+A lapsed item gets its own shorter ladder via `enterRelearning()`, because relearning something you
+once knew is not the same problem as meeting it for the first time.
+
+`LearningConfig.None` configures no steps at all, which is exactly textbook SM-2 — so an app can
+adopt the type without changing how it behaves, and turn the phase on later.
+
+Time is in **minutes** here and days in the scheduler, and neither reads a clock: `dueEpochMinute`
+and `isDue` take the minute the item was last seen and the minute it is now.
+
 ## Capping the day
 
 Come back after a week away to four hundred due cards and the honest move is to close the app. Daily
@@ -241,6 +281,8 @@ rather than producing silently wrong intervals later.
 | `Scheduler` | The algorithm interface |
 | `Sm2` / `Sm2Config` | SM-2 and its knobs |
 | `ItemSeed` | Turns an item id into the stable seed interval spreading uses |
+| `LearningQueue` / `LearningConfig` | The sub-day steps a new item walks before the scheduler takes over |
+| `LearningState` / `LearningOutcome` | Where an item is in those steps, and what a review did to it |
 | `ReviewQueue` | Due selection, ordering, counts, and recording a result |
 | `DailyLimits` | Per-day caps on reviews and new items, with the headroom arithmetic |
 | `StudySession` | What to study now, plus what was available before the cap |

@@ -39,6 +39,30 @@ abstract interface io.github.meko123456.srs/Scheduler { // io.github.meko123456.
     }
 }
 
+sealed interface io.github.meko123456.srs/LearningOutcome { // io.github.meko123456.srs/LearningOutcome|null[0]
+    final class StillLearning : io.github.meko123456.srs/LearningOutcome { // io.github.meko123456.srs/LearningOutcome.StillLearning|null[0]
+        constructor <init>(io.github.meko123456.srs/LearningState, kotlin/Int) // io.github.meko123456.srs/LearningOutcome.StillLearning.<init>|<init>(io.github.meko123456.srs.LearningState;kotlin.Int){}[0]
+
+        final val inMinutes // io.github.meko123456.srs/LearningOutcome.StillLearning.inMinutes|{}inMinutes[0]
+            final fun <get-inMinutes>(): kotlin/Int // io.github.meko123456.srs/LearningOutcome.StillLearning.inMinutes.<get-inMinutes>|<get-inMinutes>(){}[0]
+        final val state // io.github.meko123456.srs/LearningOutcome.StillLearning.state|{}state[0]
+            final fun <get-state>(): io.github.meko123456.srs/LearningState // io.github.meko123456.srs/LearningOutcome.StillLearning.state.<get-state>|<get-state>(){}[0]
+
+        final fun component1(): io.github.meko123456.srs/LearningState // io.github.meko123456.srs/LearningOutcome.StillLearning.component1|component1(){}[0]
+        final fun component2(): kotlin/Int // io.github.meko123456.srs/LearningOutcome.StillLearning.component2|component2(){}[0]
+        final fun copy(io.github.meko123456.srs/LearningState = ..., kotlin/Int = ...): io.github.meko123456.srs/LearningOutcome.StillLearning // io.github.meko123456.srs/LearningOutcome.StillLearning.copy|copy(io.github.meko123456.srs.LearningState;kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/LearningOutcome.StillLearning.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.meko123456.srs/LearningOutcome.StillLearning.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.meko123456.srs/LearningOutcome.StillLearning.toString|toString(){}[0]
+    }
+
+    final object Graduated : io.github.meko123456.srs/LearningOutcome { // io.github.meko123456.srs/LearningOutcome.Graduated|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/LearningOutcome.Graduated.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // io.github.meko123456.srs/LearningOutcome.Graduated.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // io.github.meko123456.srs/LearningOutcome.Graduated.toString|toString(){}[0]
+    }
+}
+
 final class <#A: kotlin/Any?> io.github.meko123456.srs/ReviewQueue { // io.github.meko123456.srs/ReviewQueue|null[0]
     constructor <init>(kotlin/Function1<#A, kotlin/String>, io.github.meko123456.srs/Scheduler = ...) // io.github.meko123456.srs/ReviewQueue.<init>|<init>(kotlin.Function1<1:0,kotlin.String>;io.github.meko123456.srs.Scheduler){}[0]
 
@@ -95,6 +119,68 @@ final class io.github.meko123456.srs/DailyLimits { // io.github.meko123456.srs/D
         final val None // io.github.meko123456.srs/DailyLimits.Companion.None|{}None[0]
             final fun <get-None>(): io.github.meko123456.srs/DailyLimits // io.github.meko123456.srs/DailyLimits.Companion.None.<get-None>|<get-None>(){}[0]
     }
+}
+
+final class io.github.meko123456.srs/LearningConfig { // io.github.meko123456.srs/LearningConfig|null[0]
+    constructor <init>(kotlin.collections/List<kotlin/Int> = ..., kotlin.collections/List<kotlin/Int> = ..., kotlin/Boolean = ...) // io.github.meko123456.srs/LearningConfig.<init>|<init>(kotlin.collections.List<kotlin.Int>;kotlin.collections.List<kotlin.Int>;kotlin.Boolean){}[0]
+
+    final val easyGraduatesImmediately // io.github.meko123456.srs/LearningConfig.easyGraduatesImmediately|{}easyGraduatesImmediately[0]
+        final fun <get-easyGraduatesImmediately>(): kotlin/Boolean // io.github.meko123456.srs/LearningConfig.easyGraduatesImmediately.<get-easyGraduatesImmediately>|<get-easyGraduatesImmediately>(){}[0]
+    final val newStepMinutes // io.github.meko123456.srs/LearningConfig.newStepMinutes|{}newStepMinutes[0]
+        final fun <get-newStepMinutes>(): kotlin.collections/List<kotlin/Int> // io.github.meko123456.srs/LearningConfig.newStepMinutes.<get-newStepMinutes>|<get-newStepMinutes>(){}[0]
+    final val relearningStepMinutes // io.github.meko123456.srs/LearningConfig.relearningStepMinutes|{}relearningStepMinutes[0]
+        final fun <get-relearningStepMinutes>(): kotlin.collections/List<kotlin/Int> // io.github.meko123456.srs/LearningConfig.relearningStepMinutes.<get-relearningStepMinutes>|<get-relearningStepMinutes>(){}[0]
+
+    final fun component1(): kotlin.collections/List<kotlin/Int> // io.github.meko123456.srs/LearningConfig.component1|component1(){}[0]
+    final fun component2(): kotlin.collections/List<kotlin/Int> // io.github.meko123456.srs/LearningConfig.component2|component2(){}[0]
+    final fun component3(): kotlin/Boolean // io.github.meko123456.srs/LearningConfig.component3|component3(){}[0]
+    final fun copy(kotlin.collections/List<kotlin/Int> = ..., kotlin.collections/List<kotlin/Int> = ..., kotlin/Boolean = ...): io.github.meko123456.srs/LearningConfig // io.github.meko123456.srs/LearningConfig.copy|copy(kotlin.collections.List<kotlin.Int>;kotlin.collections.List<kotlin.Int>;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/LearningConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/LearningConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/LearningConfig.toString|toString(){}[0]
+
+    final object Companion { // io.github.meko123456.srs/LearningConfig.Companion|null[0]
+        final val Default // io.github.meko123456.srs/LearningConfig.Companion.Default|{}Default[0]
+            final fun <get-Default>(): io.github.meko123456.srs/LearningConfig // io.github.meko123456.srs/LearningConfig.Companion.Default.<get-Default>|<get-Default>(){}[0]
+        final val None // io.github.meko123456.srs/LearningConfig.Companion.None|{}None[0]
+            final fun <get-None>(): io.github.meko123456.srs/LearningConfig // io.github.meko123456.srs/LearningConfig.Companion.None.<get-None>|<get-None>(){}[0]
+    }
+}
+
+final class io.github.meko123456.srs/LearningQueue { // io.github.meko123456.srs/LearningQueue|null[0]
+    constructor <init>(io.github.meko123456.srs/LearningConfig = ...) // io.github.meko123456.srs/LearningQueue.<init>|<init>(io.github.meko123456.srs.LearningConfig){}[0]
+
+    final val config // io.github.meko123456.srs/LearningQueue.config|{}config[0]
+        final fun <get-config>(): io.github.meko123456.srs/LearningConfig // io.github.meko123456.srs/LearningQueue.config.<get-config>|<get-config>(){}[0]
+
+    final fun dueEpochMinute(io.github.meko123456.srs/LearningState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/LearningQueue.dueEpochMinute|dueEpochMinute(io.github.meko123456.srs.LearningState;kotlin.Long){}[0]
+    final fun enterNew(): io.github.meko123456.srs/LearningState // io.github.meko123456.srs/LearningQueue.enterNew|enterNew(){}[0]
+    final fun enterRelearning(): io.github.meko123456.srs/LearningState // io.github.meko123456.srs/LearningQueue.enterRelearning|enterRelearning(){}[0]
+    final fun hasSteps(io.github.meko123456.srs/LearningState): kotlin/Boolean // io.github.meko123456.srs/LearningQueue.hasSteps|hasSteps(io.github.meko123456.srs.LearningState){}[0]
+    final fun isDue(io.github.meko123456.srs/LearningState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/LearningQueue.isDue|isDue(io.github.meko123456.srs.LearningState;kotlin.Long;kotlin.Long){}[0]
+    final fun review(io.github.meko123456.srs/LearningState, io.github.meko123456.srs/Grade): io.github.meko123456.srs/LearningOutcome // io.github.meko123456.srs/LearningQueue.review|review(io.github.meko123456.srs.LearningState;io.github.meko123456.srs.Grade){}[0]
+    final fun stepMinutes(io.github.meko123456.srs/LearningState): kotlin/Int // io.github.meko123456.srs/LearningQueue.stepMinutes|stepMinutes(io.github.meko123456.srs.LearningState){}[0]
+
+    final object Companion { // io.github.meko123456.srs/LearningQueue.Companion|null[0]
+        final val Default // io.github.meko123456.srs/LearningQueue.Companion.Default|{}Default[0]
+            final fun <get-Default>(): io.github.meko123456.srs/LearningQueue // io.github.meko123456.srs/LearningQueue.Companion.Default.<get-Default>|<get-Default>(){}[0]
+    }
+}
+
+final class io.github.meko123456.srs/LearningState { // io.github.meko123456.srs/LearningState|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Boolean = ...) // io.github.meko123456.srs/LearningState.<init>|<init>(kotlin.Int;kotlin.Boolean){}[0]
+
+    final val relearning // io.github.meko123456.srs/LearningState.relearning|{}relearning[0]
+        final fun <get-relearning>(): kotlin/Boolean // io.github.meko123456.srs/LearningState.relearning.<get-relearning>|<get-relearning>(){}[0]
+    final val stepIndex // io.github.meko123456.srs/LearningState.stepIndex|{}stepIndex[0]
+        final fun <get-stepIndex>(): kotlin/Int // io.github.meko123456.srs/LearningState.stepIndex.<get-stepIndex>|<get-stepIndex>(){}[0]
+
+    final fun component1(): kotlin/Int // io.github.meko123456.srs/LearningState.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // io.github.meko123456.srs/LearningState.component2|component2(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Boolean = ...): io.github.meko123456.srs/LearningState // io.github.meko123456.srs/LearningState.copy|copy(kotlin.Int;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/LearningState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/LearningState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/LearningState.toString|toString(){}[0]
 }
 
 final class io.github.meko123456.srs/Review { // io.github.meko123456.srs/Review|null[0]
