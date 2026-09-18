@@ -1,7 +1,10 @@
 package io.github.meko123456.srs.sample
 
+import io.github.meko123456.srs.Fsrs
+import io.github.meko123456.srs.FsrsState
 import io.github.meko123456.srs.Grade
 import io.github.meko123456.srs.Review
+import io.github.meko123456.srs.Scheduler
 import io.github.meko123456.srs.ReviewQueue
 import io.github.meko123456.srs.ReviewState
 import io.github.meko123456.srs.Sm2
@@ -15,6 +18,9 @@ import io.github.meko123456.srs.Sm2
  *
  * There is no clock anywhere. `today` is a counter, which is exactly how the library is meant to be
  * driven and why this output is identical on every run.
+ *
+ * It runs the deck twice, once under SM-2 and once under FSRS, against the same learner answering
+ * the same way — so the two columns at the end differ only because the algorithms do.
  *
  * `./gradlew :sample:run`
  */
@@ -56,52 +62,58 @@ private val learner = Learner(
     ),
 )
 
-public fun main() {
-    val sm2 = Sm2()
-    val queue = ReviewQueue(Card::id, sm2)
-    var reviews = emptyMap<String, Review<ReviewState>>()
+/** One algorithm's run: what it ended up scheduling, and how much studying it asked for. */
+private data class Run(val name: String, val reviews: Int, val intervals: Map<String, Long>)
 
-    println("A six-card deck, thirty days, no clock in sight.\n")
-
+private fun <S> study(name: String, scheduler: Scheduler<S>, intervalOf: (S, Long) -> Long): Run {
+    val queue = ReviewQueue(Card::id, scheduler)
+    var reviews = emptyMap<String, Review<S>>()
     var studied = 0
+
     for (day in 0L until 30L) {
-        val due = queue.due(deck, reviews, day)
-        if (due.isEmpty()) {
-            val next = queue.nextDueEpochDay(deck, reviews)
-            val wait = if (next == null) "nothing scheduled" else "next on day $next"
-            println("day %2d   nothing due  (%s)".format(day, wait))
-            continue
-        }
-
-        println("day %2d   %d due".format(day, due.size))
         // Only so much study happens in one sitting; the rest rolls over, still due tomorrow.
-        for (card in due.take(4)) {
+        for (card in queue.due(deck, reviews, day).take(4)) {
             val existing = reviews[card.id]
-            val grade = learner.grade(card, existing?.state?.repetitions ?: 0, seed = (day * 31 + card.id.hashCode()).toInt())
-            val updated = queue.record(card, existing, grade, day)
-            reviews = reviews + (card.id to updated)
+            val seen = existing?.let { day - it.lastReviewedEpochDay }?.toInt() ?: 0
+            val grade = learner.grade(card, seen, seed = (day * 31 + card.id.hashCode()).toInt())
+            reviews = reviews + (card.id to queue.record(card, existing, grade, day))
             studied++
-
-            val leech = if (sm2.isLeech(updated.state)) "  ← leech" else ""
-            println(
-                "          %-22s %-5s → next in %2d day(s)%s".format(
-                    card.front, grade, updated.state.intervalDays, leech,
-                ),
-            )
         }
     }
 
-    println("\nAfter thirty days — $studied reviews in total:\n")
-    println("  %-22s %8s %8s %7s".format("card", "interval", "lapses", "ease"))
+    val intervals = deck.associate { card ->
+        val review = reviews[card.id]
+        card.id to (review?.let { intervalOf(it.state, it.lastReviewedEpochDay) } ?: 0L)
+    }
+    return Run(name, studied, intervals)
+}
+
+public fun main() {
+    println("A six-card deck, thirty days, no clock in sight.")
+    println("The same learner answers the same way; only the algorithm changes.\n")
+
+    val fsrsScheduler = Fsrs()
+    val sm2 = study("SM-2", Sm2()) { state: ReviewState, _ -> state.intervalDays }
+    val fsrs = study("FSRS", fsrsScheduler) { state: FsrsState, _ -> fsrsScheduler.intervalDays(state) }
+
+    println("  %-24s %10s %10s".format("card", sm2.name, fsrs.name))
     deck.forEach { card ->
-        val state = reviews[card.id]?.state
-        if (state == null) {
-            println("  %-22s %8s".format(card.front, "unseen"))
-        } else {
-            println(
-                "  %-22s %8d %8d %7.2f".format(card.front, state.intervalDays, state.lapses, state.easeFactor),
-            )
-        }
+        println(
+            "  %-24s %8d d %8d d".format(
+                card.front, sm2.intervals.getValue(card.id), fsrs.intervals.getValue(card.id),
+            ),
+        )
     }
-    println("\nThe cards that came easily are weeks apart; the ones that were fought for are still close.")
+    println("\n  %-24s %8d   %8d".format("reviews in the month", sm2.reviews, fsrs.reviews))
+
+    println(
+        """
+
+        Both push the easy cards weeks out and keep the fought-for ones close, which is the whole
+        job. They disagree on how far and how fast, and that is the point of being able to choose:
+        FSRS derives its intervals from a target retention you set, SM-2 from an ease factor that
+        drifts. Neither number here is a verdict — thirty simulated days with one invented learner
+        proves nothing about which is better for real material.
+        """.trimIndent(),
+    )
 }
