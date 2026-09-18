@@ -9,7 +9,7 @@ package io.github.meko123456.srs
  * in a test, and there is no cache to invalidate.
  *
  * ```
- * val queue = ReviewQueue(Card::id)
+ * val queue = ReviewQueue(Card::id)                                 // textbook SM-2
  * val today = Clock.System.todayIn(TimeZone.currentSystemDefault()).toEpochDays().toLong()
  *
  * val toStudy = queue.due(cards, reviews, today)
@@ -17,11 +17,13 @@ package io.github.meko123456.srs
  * ```
  *
  * @param idOf how to identify an item in the [Review] map.
- * @param scheduler the algorithm to schedule by; textbook SM-2 unless told otherwise.
+ * @param scheduler the algorithm to schedule by. [S], the shape of an item's history, comes from it,
+ *   so nothing here has to be written out: `ReviewQueue(Card::id, Fsrs())` is a
+ *   `ReviewQueue<Card, FsrsState>`.
  */
-public class ReviewQueue<T>(
+public class ReviewQueue<T, S>(
     private val idOf: (T) -> String,
-    private val scheduler: Scheduler = Sm2.Default,
+    private val scheduler: Scheduler<S>,
 ) {
 
     /**
@@ -38,7 +40,7 @@ public class ReviewQueue<T>(
      */
     public fun due(
         items: List<T>,
-        reviews: Map<String, Review>,
+        reviews: Map<String, Review<S>>,
         todayEpochDay: Long,
     ): List<T> = session(items, reviews, todayEpochDay, DailyLimits.None).items
 
@@ -67,7 +69,7 @@ public class ReviewQueue<T>(
      */
     public fun session(
         items: List<T>,
-        reviews: Map<String, Review>,
+        reviews: Map<String, Review<S>>,
         todayEpochDay: Long,
         limits: DailyLimits = DailyLimits.None,
     ): StudySession<T> {
@@ -100,7 +102,7 @@ public class ReviewQueue<T>(
     /** How many items are due on [todayEpochDay], without building the list. */
     public fun dueCount(
         items: List<T>,
-        reviews: Map<String, Review>,
+        reviews: Map<String, Review<S>>,
         todayEpochDay: Long,
     ): Int = items.count { item -> isDue(reviews[idOf(item)], todayEpochDay) }
 
@@ -110,10 +112,10 @@ public class ReviewQueue<T>(
      *
      * What a "nothing due today — next review in 3 days" line is built from.
      */
-    public fun nextDueEpochDay(items: List<T>, reviews: Map<String, Review>): Long? = items
+    public fun nextDueEpochDay(items: List<T>, reviews: Map<String, Review<S>>): Long? = items
         .mapNotNull { item ->
             val review = reviews[idOf(item)] ?: return@mapNotNull null
-            if (review.state.isNew) null
+            if (scheduler.isNew(review.state)) null
             else scheduler.dueEpochDay(review.state, review.lastReviewedEpochDay)
         }
         .minOrNull()
@@ -133,19 +135,37 @@ public class ReviewQueue<T>(
      */
     public fun record(
         item: T,
-        review: Review?,
+        review: Review<S>?,
         grade: Grade,
         todayEpochDay: Long,
-    ): Review = Review(
-        state = scheduler.schedule(review?.state ?: ReviewState(), grade, ItemSeed.of(idOf(item))),
+    ): Review<S> = Review(
+        state = scheduler.schedule(
+            state = review?.state ?: scheduler.initial(),
+            grade = grade,
+            // How long it actually was, not how long it was meant to be. Negative if the caller
+            // passes a day before the last review, so it is floored at zero rather than handed to
+            // an algorithm as a negative age.
+            elapsedDays = review?.let { (todayEpochDay - it.lastReviewedEpochDay).coerceAtLeast(0) } ?: 0,
+            itemSeed = ItemSeed.of(idOf(item)),
+        ),
         lastReviewedEpochDay = todayEpochDay,
     )
 
     /** An absent record and a never-graded one are both new. */
-    private fun isNew(review: Review?): Boolean = review == null || review.state.isNew
+    private fun isNew(review: Review<S>?): Boolean = review == null || scheduler.isNew(review.state)
 
     // Beyond being new, the scheduler decides — and it already treats a new state as due whatever
     // day is stored beside it.
-    private fun isDue(review: Review?, todayEpochDay: Long): Boolean =
+    private fun isDue(review: Review<S>?, todayEpochDay: Long): Boolean =
         review == null || scheduler.isDue(review.state, review.lastReviewedEpochDay, todayEpochDay)
 }
+
+/**
+ * A queue running textbook SM-2, which is what most callers want.
+ *
+ * A function rather than a default argument on the constructor: [ReviewQueue]'s state type comes
+ * from its scheduler, and a default cannot pin that type for one case without pinning it for all.
+ * This keeps `ReviewQueue(Card::id)` meaning exactly what it always did.
+ */
+public fun <T> ReviewQueue(idOf: (T) -> String): ReviewQueue<T, ReviewState> =
+    ReviewQueue(idOf, Sm2.Default)

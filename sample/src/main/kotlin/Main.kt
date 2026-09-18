@@ -3,6 +3,7 @@ package io.github.meko123456.srs.sample
 import io.github.meko123456.srs.Grade
 import io.github.meko123456.srs.Review
 import io.github.meko123456.srs.ReviewQueue
+import io.github.meko123456.srs.ReviewState
 import io.github.meko123456.srs.Sm2
 
 /**
@@ -58,7 +59,7 @@ private val learner = Learner(
 public fun main() {
     val sm2 = Sm2()
     val queue = ReviewQueue(Card::id, sm2)
-    var reviews = emptyMap<String, Review>()
+    var reviews = emptyMap<String, Review<ReviewState>>()
 
     println("A six-card deck, thirty days, no clock in sight.\n")
 

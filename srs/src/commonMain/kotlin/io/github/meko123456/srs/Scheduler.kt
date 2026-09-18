@@ -4,9 +4,21 @@ package io.github.meko123456.srs
  * A spaced-repetition algorithm: given an item's history and how the last review went, say when to
  * show it next.
  *
- * The interface exists so the algorithm is a choice rather than a fact of the calling code. [Sm2] is
- * the implementation shipped here; a caller can supply Leitner boxes, a fixed ladder, or FSRS
- * without touching the review screen that drives it.
+ * The interface exists so the algorithm is a choice rather than a fact of the calling code. Two
+ * implementations ship here — [Sm2] and [Fsrs] — and a caller can supply Leitner boxes or a fixed
+ * ladder without touching the review screen that drives it.
+ *
+ * ## Why [S] is a type parameter
+ *
+ * Because the algorithms genuinely disagree about what an item's history *is*. SM-2 remembers a
+ * repetition count, an interval and an ease factor; FSRS remembers a stability in days and a
+ * difficulty, and has no concept of ease at all. A single state type would have to be the union of
+ * both, carrying fields that are meaningless to whichever algorithm is running and inviting a caller
+ * to read one that is.
+ *
+ * So the state travels with the scheduler that understands it. [Review] and [ReviewQueue] are
+ * parameterised the same way, and the type is inferred from the scheduler, so
+ * `ReviewQueue(Card::id, Fsrs())` needs no type arguments written out.
  *
  * ## Time
  *
@@ -18,7 +30,7 @@ package io.github.meko123456.srs
  *
  * Implementations must be pure: same inputs, same outputs, no clock reads.
  */
-public interface Scheduler {
+public interface Scheduler<S> {
 
     public companion object {
         /**
@@ -32,8 +44,28 @@ public interface Scheduler {
         public const val NO_SEED: Long = 0L
     }
 
+    /** The state of an item that has never been reviewed. */
+    public fun initial(): S
+
+    /**
+     * Whether [state] describes an item that has never been reviewed.
+     *
+     * On the interface rather than on the state type because the state type is now the algorithm's
+     * own: SM-2 calls an item new when it has no repetitions and no interval, FSRS when it has no
+     * stability yet, and neither definition belongs to the other.
+     */
+    public fun isNew(state: S): Boolean
+
     /**
      * The item's state after grading a review as [grade].
+     *
+     * [elapsedDays] is how long it actually was since the last review, which is not always the
+     * interval that was asked for — people come back late, and sometimes early. Whether that matters
+     * is one of the real differences between algorithms: SM-2 ignores it entirely and computes from
+     * the interval it last handed out, so answering a card three weeks overdue counts the same as
+     * answering it on time. FSRS uses it, because how likely you were to still remember is exactly
+     * what it is modelling. Zero for a new item, and zero is the default so a caller that does not
+     * yet care need not pass it.
      *
      * [itemSeed] identifies *which* item this is, for schedulers that spread intervals so that
      * everything studied on one day does not come back on one day. It must be stable for an item
@@ -43,10 +75,15 @@ public interface Scheduler {
      * The seed is only ever used to pick a fixed offset. Same state, same grade and same seed
      * always give the same answer, so this stays a pure function and stays testable.
      */
-    public fun schedule(state: ReviewState, grade: Grade, itemSeed: Long = NO_SEED): ReviewState
+    public fun schedule(
+        state: S,
+        grade: Grade,
+        elapsedDays: Long = 0,
+        itemSeed: Long = NO_SEED,
+    ): S
 
     /** The epoch day an item last reviewed on [lastReviewedEpochDay] next comes up. */
-    public fun dueEpochDay(state: ReviewState, lastReviewedEpochDay: Long): Long
+    public fun dueEpochDay(state: S, lastReviewedEpochDay: Long): Long
 
     /**
      * Whether the item should be reviewed on [todayEpochDay].
@@ -60,8 +97,8 @@ public interface Scheduler {
      * a never-seen item's availability depend on a field that means nothing yet.
      */
     public fun isDue(
-        state: ReviewState,
+        state: S,
         lastReviewedEpochDay: Long,
         todayEpochDay: Long,
-    ): Boolean = state.isNew || dueEpochDay(state, lastReviewedEpochDay) <= todayEpochDay
+    ): Boolean = isNew(state) || dueEpochDay(state, lastReviewedEpochDay) <= todayEpochDay
 }

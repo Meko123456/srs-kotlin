@@ -15,9 +15,9 @@ class IntervalSpreadTest {
     private val spread = Sm2(Sm2Config(fuzzFactor = 0.05))
 
     /** Drives an item through [reviews] passes and returns the interval it ends on. */
-    private fun intervalAfter(scheduler: Scheduler, reviews: Int, seed: Long): Long {
+    private fun intervalAfter(scheduler: Scheduler<ReviewState>, reviews: Int, seed: Long): Long {
         var state = ReviewState()
-        repeat(reviews) { state = scheduler.schedule(state, Grade.GOOD, seed) }
+        repeat(reviews) { state = scheduler.schedule(state, Grade.GOOD, itemSeed = seed) }
         return state.intervalDays
     }
 
@@ -42,9 +42,9 @@ class IntervalSpreadTest {
     @Test
     fun theSameItemAlwaysGetsTheSameAnswer() {
         // The whole reason the offset is derived rather than drawn at random.
-        val first = spread.schedule(ReviewState(repetitions = 5, intervalDays = 40), Grade.GOOD, 99)
+        val first = spread.schedule(ReviewState(repetitions = 5, intervalDays = 40), Grade.GOOD, itemSeed = 99)
         repeat(20) {
-            val again = spread.schedule(ReviewState(repetitions = 5, intervalDays = 40), Grade.GOOD, 99)
+            val again = spread.schedule(ReviewState(repetitions = 5, intervalDays = 40), Grade.GOOD, itemSeed = 99)
             assertEquals(first, again)
         }
     }
@@ -70,7 +70,7 @@ class IntervalSpreadTest {
             val moved = spread.schedule(
                 ReviewState(repetitions = 5, intervalDays = 16, easeFactor = 2.5),
                 Grade.GOOD,
-                ItemSeed.of(id),
+                itemSeed = ItemSeed.of(id),
             ).intervalDays
             assertTrue(moved in 38L..42L, "id $id landed on $moved, outside 38..42")
         }
@@ -79,7 +79,7 @@ class IntervalSpreadTest {
     @Test
     fun bothDirectionsActuallyGetUsed() {
         val moved = (1L..200L).map {
-            spread.schedule(ReviewState(repetitions = 5, intervalDays = 16), Grade.GOOD, ItemSeed.of(it)).intervalDays
+            spread.schedule(ReviewState(repetitions = 5, intervalDays = 16), Grade.GOOD, itemSeed = ItemSeed.of(it)).intervalDays
         }
         assertTrue(moved.any { it < 40 }, "nothing was ever scheduled earlier")
         assertTrue(moved.any { it > 40 }, "nothing was ever scheduled later")
@@ -91,7 +91,7 @@ class IntervalSpreadTest {
         // failures live.
         assertEquals(1L, intervalAfter(spread, 1, seed = ItemSeed.of("anything")))
 
-        val lapsed = spread.schedule(ReviewState(repetitions = 9, intervalDays = 90), Grade.AGAIN, ItemSeed.of("x"))
+        val lapsed = spread.schedule(ReviewState(repetitions = 9, intervalDays = 90), Grade.AGAIN, itemSeed = ItemSeed.of("x"))
         assertEquals(1L, lapsed.intervalDays)
     }
 
@@ -99,7 +99,7 @@ class IntervalSpreadTest {
     fun anEarnedIntervalIsNeverDroppedIntoTomorrow() {
         val tight = Sm2(Sm2Config(fuzzFactor = 0.9))
         (1L..300L).forEach { id ->
-            val moved = tight.schedule(ReviewState(repetitions = 3, intervalDays = 1), Grade.GOOD, ItemSeed.of(id))
+            val moved = tight.schedule(ReviewState(repetitions = 3, intervalDays = 1), Grade.GOOD, itemSeed = ItemSeed.of(id))
             assertTrue(moved.intervalDays >= 2, "id $id fell back to ${moved.intervalDays} days")
         }
     }
@@ -108,7 +108,7 @@ class IntervalSpreadTest {
     fun theCeilingStillHolds() {
         val capped = Sm2(Sm2Config(fuzzFactor = 0.5, maxIntervalDays = 100))
         (1L..100L).forEach { id ->
-            val moved = capped.schedule(ReviewState(repetitions = 8, intervalDays = 90), Grade.GOOD, ItemSeed.of(id))
+            val moved = capped.schedule(ReviewState(repetitions = 8, intervalDays = 90), Grade.GOOD, itemSeed = ItemSeed.of(id))
             assertTrue(moved.intervalDays <= 100, "id $id exceeded the ceiling at ${moved.intervalDays}")
         }
     }
@@ -123,7 +123,7 @@ class IntervalSpreadTest {
         repeat(8) {
             val before = state.intervalDays
             val expected = if (state.repetitions >= 2) (before * state.easeFactor) else 0.0
-            state = spread.schedule(state, Grade.GOOD, seed)
+            state = spread.schedule(state, Grade.GOOD, itemSeed = seed)
             if (expected > 0) directions += state.intervalDays.compareTo(expected.toLong())
         }
         assertTrue(directions.size > 1, "the item moved the same way at every review: $directions")
@@ -180,7 +180,7 @@ class IntervalSpreadTest {
         // Consecutive row ids must not produce neighbouring offsets, which is the whole reason
         // ItemSeed.of(Long) mixes rather than passing the id through.
         val offsets = (1L..8L).map {
-            spread.schedule(ReviewState(repetitions = 5, intervalDays = 16), Grade.GOOD, ItemSeed.of(it)).intervalDays
+            spread.schedule(ReviewState(repetitions = 5, intervalDays = 16), Grade.GOOD, itemSeed = ItemSeed.of(it)).intervalDays
         }
         assertTrue(offsets.toSet().size >= 3, "consecutive ids barely moved apart: $offsets")
     }
