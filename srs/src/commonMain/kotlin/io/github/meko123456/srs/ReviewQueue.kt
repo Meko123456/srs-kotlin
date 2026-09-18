@@ -53,8 +53,13 @@ public class ReviewQueue<T, S>(
      * Reviews and new items are capped against their own budgets rather than a shared one, so a
      * backlog of due reviews never silently stops new material appearing, and a large import never
      * pushes out the reviews that are the reason the app works. Within the review budget the
-     * *most overdue* survive, because the alternative is dropping exactly the items closest to being
-     * forgotten.
+     * *most overdue* survive, on the reasoning that lateness is the best available stand-in for risk
+     * of forgetting.
+     *
+     * That is exactly right under [Sm2] and only roughly right under [Fsrs], which models recall
+     * directly and can disagree — a three-day item two days late is in more danger than a
+     * two-hundred-day item ten days late. It only matters when a cap is actually cutting items, and
+     * fixing it would change [Scheduler], so it is tracked rather than assumed away.
      *
      * [DailyLimits.remainingAfter] turns a day's settings into the limits for this call, given what
      * has already been studied — the library has no idea what happened before it was asked.

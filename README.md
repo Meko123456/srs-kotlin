@@ -216,7 +216,15 @@ Reviews and new items have **separate budgets**, because they fail differently: 
 means forgetting something already learned, while skipping a new item means learning it tomorrow
 instead. A wall of due reviews therefore never stops new material appearing, and a large import never
 pushes out the reviews that are the reason the app works. Within the review budget the **most
-overdue survive** — dropping those would mean dropping exactly the items closest to being forgotten.
+overdue survive**, on the reasoning that lateness is the best available stand-in for risk of
+forgetting.
+
+That reasoning is exactly true under SM-2 and only roughly true under FSRS, which models recall
+directly and can therefore disagree: a three-day item two days late is in far more danger than a
+two-hundred-day item ten days late, and lateness ranks them the wrong way round. It only bites when
+a daily cap is actually cutting items, and changing the ordering would change the `Scheduler`
+interface, so it is written down as [#15](https://github.com/Meko123456/srs-kotlin/issues/15) rather
+than quietly left implied.
 
 `remainingAfter` exists because the library cannot know what you studied before it was asked, and
 because the two easy ways to get that subtraction wrong are both handled: `UNLIMITED` stays unlimited
