@@ -166,7 +166,7 @@ val learning = LearningQueue.Default          // one minute, then ten
 
 when (val outcome = learning.review(item.learning, grade)) {
     is LearningOutcome.StillLearning -> showAgainIn(outcome.inMinutes)
-    LearningOutcome.Graduated        -> item.review = Sm2.schedule(ReviewState(), grade)
+    LearningOutcome.Graduated        -> item.review = scheduler.schedule(scheduler.initial(), grade)
 }
 ```
 
@@ -185,6 +185,9 @@ the hour.
 
 A lapsed item gets its own shorter ladder via `enterRelearning()`, because relearning something you
 once knew is not the same problem as meeting it for the first time.
+
+The handoff goes through `scheduler.initial()` rather than naming a state type, so learning steps sit
+in front of FSRS exactly as they do in front of SM-2.
 
 `LearningConfig.None` configures no steps at all, which is exactly textbook SM-2 — so an app can
 adopt the type without changing how it behaves, and turn the phase on later.

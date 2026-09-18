@@ -85,7 +85,9 @@ public sealed interface LearningOutcome {
      * Finished. Hand the item to the [Scheduler] from here.
      *
      * A graduating item has proved itself over minutes, not days, so it arrives at the scheduler as
-     * a new item — which is exactly what it is as far as day-grained spacing is concerned.
+     * a new item — which is exactly what it is as far as day-grained spacing is concerned. Whichever
+     * scheduler that is: `scheduler.initial()` is the state to start it from, so this composes with
+     * [Fsrs] exactly as it does with [Sm2].
      */
     public data object Graduated : LearningOutcome
 }
@@ -106,7 +108,7 @@ public sealed interface LearningOutcome {
  * val outcome = learning.review(item.learning, grade)
  * when (outcome) {
  *     is LearningOutcome.StillLearning -> item.showAgainIn(outcome.inMinutes)
- *     LearningOutcome.Graduated        -> item.review = Sm2.schedule(ReviewState(), grade)
+ *     LearningOutcome.Graduated        -> item.review = scheduler.schedule(scheduler.initial(), grade)
  * }
  * ```
  *
