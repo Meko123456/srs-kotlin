@@ -73,8 +73,8 @@ mavenPublishing {
     pom {
         name.set("srs-kotlin")
         description.set(
-            "Spaced-repetition scheduling for Kotlin Multiplatform — a configurable, " +
-                "exhaustively tested SM-2 implementation with no dependencies.",
+            "Spaced-repetition scheduling for Kotlin Multiplatform — configurable, exhaustively " +
+                "tested SM-2 and FSRS implementations with no dependencies.",
         )
         url.set("https://github.com/Meko123456/srs-kotlin")
         licenses {
