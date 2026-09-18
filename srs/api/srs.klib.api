@@ -28,10 +28,12 @@ final enum class io.github.meko123456.srs/Grade : kotlin/Enum<io.github.meko1234
     }
 }
 
-abstract interface io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Scheduler|null[0]
-    abstract fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Scheduler.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
-    abstract fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long = ...): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Scheduler.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
-    open fun isDue(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isDue|isDue(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
+abstract interface <#A: kotlin/Any?> io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Scheduler|null[0]
+    abstract fun dueEpochDay(#A, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Scheduler.dueEpochDay|dueEpochDay(1:0;kotlin.Long){}[0]
+    abstract fun initial(): #A // io.github.meko123456.srs/Scheduler.initial|initial(){}[0]
+    abstract fun isNew(#A): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isNew|isNew(1:0){}[0]
+    abstract fun schedule(#A, io.github.meko123456.srs/Grade, kotlin/Long = ..., kotlin/Long = ...): #A // io.github.meko123456.srs/Scheduler.schedule|schedule(1:0;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+    open fun isDue(#A, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isDue|isDue(1:0;kotlin.Long;kotlin.Long){}[0]
 
     final object Companion { // io.github.meko123456.srs/Scheduler.Companion|null[0]
         final const val NO_SEED // io.github.meko123456.srs/Scheduler.Companion.NO_SEED|{}NO_SEED[0]
@@ -63,14 +65,30 @@ sealed interface io.github.meko123456.srs/LearningOutcome { // io.github.meko123
     }
 }
 
-final class <#A: kotlin/Any?> io.github.meko123456.srs/ReviewQueue { // io.github.meko123456.srs/ReviewQueue|null[0]
-    constructor <init>(kotlin/Function1<#A, kotlin/String>, io.github.meko123456.srs/Scheduler = ...) // io.github.meko123456.srs/ReviewQueue.<init>|<init>(kotlin.Function1<1:0,kotlin.String>;io.github.meko123456.srs.Scheduler){}[0]
+final class <#A: kotlin/Any?, #B: kotlin/Any?> io.github.meko123456.srs/ReviewQueue { // io.github.meko123456.srs/ReviewQueue|null[0]
+    constructor <init>(kotlin/Function1<#A, kotlin/String>, io.github.meko123456.srs/Scheduler<#B>) // io.github.meko123456.srs/ReviewQueue.<init>|<init>(kotlin.Function1<1:0,kotlin.String>;io.github.meko123456.srs.Scheduler<1:1>){}[0]
 
-    final fun due(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>, kotlin/Long): kotlin.collections/List<#A> // io.github.meko123456.srs/ReviewQueue.due|due(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>;kotlin.Long){}[0]
-    final fun dueCount(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>, kotlin/Long): kotlin/Int // io.github.meko123456.srs/ReviewQueue.dueCount|dueCount(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>;kotlin.Long){}[0]
-    final fun nextDueEpochDay(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>): kotlin/Long? // io.github.meko123456.srs/ReviewQueue.nextDueEpochDay|nextDueEpochDay(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>){}[0]
-    final fun record(#A, io.github.meko123456.srs/Review?, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/Review // io.github.meko123456.srs/ReviewQueue.record|record(1:0;io.github.meko123456.srs.Review?;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
-    final fun session(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review>, kotlin/Long, io.github.meko123456.srs/DailyLimits = ...): io.github.meko123456.srs/StudySession<#A> // io.github.meko123456.srs/ReviewQueue.session|session(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review>;kotlin.Long;io.github.meko123456.srs.DailyLimits){}[0]
+    final fun due(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review<#B>>, kotlin/Long): kotlin.collections/List<#A> // io.github.meko123456.srs/ReviewQueue.due|due(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review<1:1>>;kotlin.Long){}[0]
+    final fun dueCount(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review<#B>>, kotlin/Long): kotlin/Int // io.github.meko123456.srs/ReviewQueue.dueCount|dueCount(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review<1:1>>;kotlin.Long){}[0]
+    final fun nextDueEpochDay(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review<#B>>): kotlin/Long? // io.github.meko123456.srs/ReviewQueue.nextDueEpochDay|nextDueEpochDay(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review<1:1>>){}[0]
+    final fun record(#A, io.github.meko123456.srs/Review<#B>?, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/Review<#B> // io.github.meko123456.srs/ReviewQueue.record|record(1:0;io.github.meko123456.srs.Review<1:1>?;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
+    final fun session(kotlin.collections/List<#A>, kotlin.collections/Map<kotlin/String, io.github.meko123456.srs/Review<#B>>, kotlin/Long, io.github.meko123456.srs/DailyLimits = ...): io.github.meko123456.srs/StudySession<#A> // io.github.meko123456.srs/ReviewQueue.session|session(kotlin.collections.List<1:0>;kotlin.collections.Map<kotlin.String,io.github.meko123456.srs.Review<1:1>>;kotlin.Long;io.github.meko123456.srs.DailyLimits){}[0]
+}
+
+final class <#A: kotlin/Any?> io.github.meko123456.srs/Review { // io.github.meko123456.srs/Review|null[0]
+    constructor <init>(#A, kotlin/Long = ...) // io.github.meko123456.srs/Review.<init>|<init>(1:0;kotlin.Long){}[0]
+
+    final val lastReviewedEpochDay // io.github.meko123456.srs/Review.lastReviewedEpochDay|{}lastReviewedEpochDay[0]
+        final fun <get-lastReviewedEpochDay>(): kotlin/Long // io.github.meko123456.srs/Review.lastReviewedEpochDay.<get-lastReviewedEpochDay>|<get-lastReviewedEpochDay>(){}[0]
+    final val state // io.github.meko123456.srs/Review.state|{}state[0]
+        final fun <get-state>(): #A // io.github.meko123456.srs/Review.state.<get-state>|<get-state>(){}[0]
+
+    final fun component1(): #A // io.github.meko123456.srs/Review.component1|component1(){}[0]
+    final fun component2(): kotlin/Long // io.github.meko123456.srs/Review.component2|component2(){}[0]
+    final fun copy(#A = ..., kotlin/Long = ...): io.github.meko123456.srs/Review<#A> // io.github.meko123456.srs/Review.copy|copy(1:0;kotlin.Long){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/Review.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/Review.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/Review.toString|toString(){}[0]
 }
 
 final class <#A: kotlin/Any?> io.github.meko123456.srs/StudySession { // io.github.meko123456.srs/StudySession|null[0]
@@ -119,6 +137,88 @@ final class io.github.meko123456.srs/DailyLimits { // io.github.meko123456.srs/D
         final val None // io.github.meko123456.srs/DailyLimits.Companion.None|{}None[0]
             final fun <get-None>(): io.github.meko123456.srs/DailyLimits // io.github.meko123456.srs/DailyLimits.Companion.None.<get-None>|<get-None>(){}[0]
     }
+}
+
+final class io.github.meko123456.srs/Fsrs : io.github.meko123456.srs/Scheduler<io.github.meko123456.srs/FsrsState> { // io.github.meko123456.srs/Fsrs|null[0]
+    constructor <init>(io.github.meko123456.srs/FsrsConfig = ...) // io.github.meko123456.srs/Fsrs.<init>|<init>(io.github.meko123456.srs.FsrsConfig){}[0]
+
+    final val config // io.github.meko123456.srs/Fsrs.config|{}config[0]
+        final fun <get-config>(): io.github.meko123456.srs/FsrsConfig // io.github.meko123456.srs/Fsrs.config.<get-config>|<get-config>(){}[0]
+
+    final fun dueEpochDay(io.github.meko123456.srs/FsrsState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Fsrs.dueEpochDay|dueEpochDay(io.github.meko123456.srs.FsrsState;kotlin.Long){}[0]
+    final fun initial(): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.initial|initial(){}[0]
+    final fun intervalDays(io.github.meko123456.srs/FsrsState, kotlin/Long = ...): kotlin/Long // io.github.meko123456.srs/Fsrs.intervalDays|intervalDays(io.github.meko123456.srs.FsrsState;kotlin.Long){}[0]
+    final fun isLeech(io.github.meko123456.srs/FsrsState, kotlin/Int = ...): kotlin/Boolean // io.github.meko123456.srs/Fsrs.isLeech|isLeech(io.github.meko123456.srs.FsrsState;kotlin.Int){}[0]
+    final fun isNew(io.github.meko123456.srs/FsrsState): kotlin/Boolean // io.github.meko123456.srs/Fsrs.isNew|isNew(io.github.meko123456.srs.FsrsState){}[0]
+    final fun retrievability(kotlin/Long, kotlin/Double): kotlin/Double // io.github.meko123456.srs/Fsrs.retrievability|retrievability(kotlin.Long;kotlin.Double){}[0]
+    final fun schedule(io.github.meko123456.srs/FsrsState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.schedule|schedule(io.github.meko123456.srs.FsrsState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+
+    final object Default : io.github.meko123456.srs/Scheduler<io.github.meko123456.srs/FsrsState> { // io.github.meko123456.srs/Fsrs.Default|null[0]
+        final const val DEFAULT_LEECH_THRESHOLD // io.github.meko123456.srs/Fsrs.Default.DEFAULT_LEECH_THRESHOLD|{}DEFAULT_LEECH_THRESHOLD[0]
+            final fun <get-DEFAULT_LEECH_THRESHOLD>(): kotlin/Int // io.github.meko123456.srs/Fsrs.Default.DEFAULT_LEECH_THRESHOLD.<get-DEFAULT_LEECH_THRESHOLD>|<get-DEFAULT_LEECH_THRESHOLD>(){}[0]
+
+        final fun dueEpochDay(io.github.meko123456.srs/FsrsState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Fsrs.Default.dueEpochDay|dueEpochDay(io.github.meko123456.srs.FsrsState;kotlin.Long){}[0]
+        final fun initial(): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.Default.initial|initial(){}[0]
+        final fun isDue(io.github.meko123456.srs/FsrsState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Fsrs.Default.isDue|isDue(io.github.meko123456.srs.FsrsState;kotlin.Long;kotlin.Long){}[0]
+        final fun isNew(io.github.meko123456.srs/FsrsState): kotlin/Boolean // io.github.meko123456.srs/Fsrs.Default.isNew|isNew(io.github.meko123456.srs.FsrsState){}[0]
+        final fun schedule(io.github.meko123456.srs/FsrsState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.Default.schedule|schedule(io.github.meko123456.srs.FsrsState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+    }
+}
+
+final class io.github.meko123456.srs/FsrsConfig { // io.github.meko123456.srs/FsrsConfig|null[0]
+    constructor <init>(kotlin.collections/List<kotlin/Double> = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Double = ...) // io.github.meko123456.srs/FsrsConfig.<init>|<init>(kotlin.collections.List<kotlin.Double>;kotlin.Double;kotlin.Long;kotlin.Double){}[0]
+
+    final val fuzzFactor // io.github.meko123456.srs/FsrsConfig.fuzzFactor|{}fuzzFactor[0]
+        final fun <get-fuzzFactor>(): kotlin/Double // io.github.meko123456.srs/FsrsConfig.fuzzFactor.<get-fuzzFactor>|<get-fuzzFactor>(){}[0]
+    final val maximumIntervalDays // io.github.meko123456.srs/FsrsConfig.maximumIntervalDays|{}maximumIntervalDays[0]
+        final fun <get-maximumIntervalDays>(): kotlin/Long // io.github.meko123456.srs/FsrsConfig.maximumIntervalDays.<get-maximumIntervalDays>|<get-maximumIntervalDays>(){}[0]
+    final val requestRetention // io.github.meko123456.srs/FsrsConfig.requestRetention|{}requestRetention[0]
+        final fun <get-requestRetention>(): kotlin/Double // io.github.meko123456.srs/FsrsConfig.requestRetention.<get-requestRetention>|<get-requestRetention>(){}[0]
+    final val weights // io.github.meko123456.srs/FsrsConfig.weights|{}weights[0]
+        final fun <get-weights>(): kotlin.collections/List<kotlin/Double> // io.github.meko123456.srs/FsrsConfig.weights.<get-weights>|<get-weights>(){}[0]
+
+    final fun component1(): kotlin.collections/List<kotlin/Double> // io.github.meko123456.srs/FsrsConfig.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // io.github.meko123456.srs/FsrsConfig.component2|component2(){}[0]
+    final fun component3(): kotlin/Long // io.github.meko123456.srs/FsrsConfig.component3|component3(){}[0]
+    final fun component4(): kotlin/Double // io.github.meko123456.srs/FsrsConfig.component4|component4(){}[0]
+    final fun copy(kotlin.collections/List<kotlin/Double> = ..., kotlin/Double = ..., kotlin/Long = ..., kotlin/Double = ...): io.github.meko123456.srs/FsrsConfig // io.github.meko123456.srs/FsrsConfig.copy|copy(kotlin.collections.List<kotlin.Double>;kotlin.Double;kotlin.Long;kotlin.Double){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/FsrsConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/FsrsConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/FsrsConfig.toString|toString(){}[0]
+
+    final object Companion { // io.github.meko123456.srs/FsrsConfig.Companion|null[0]
+        final const val WEIGHT_COUNT // io.github.meko123456.srs/FsrsConfig.Companion.WEIGHT_COUNT|{}WEIGHT_COUNT[0]
+            final fun <get-WEIGHT_COUNT>(): kotlin/Int // io.github.meko123456.srs/FsrsConfig.Companion.WEIGHT_COUNT.<get-WEIGHT_COUNT>|<get-WEIGHT_COUNT>(){}[0]
+
+        final val DEFAULT_WEIGHTS // io.github.meko123456.srs/FsrsConfig.Companion.DEFAULT_WEIGHTS|{}DEFAULT_WEIGHTS[0]
+            final fun <get-DEFAULT_WEIGHTS>(): kotlin.collections/List<kotlin/Double> // io.github.meko123456.srs/FsrsConfig.Companion.DEFAULT_WEIGHTS.<get-DEFAULT_WEIGHTS>|<get-DEFAULT_WEIGHTS>(){}[0]
+        final val Default // io.github.meko123456.srs/FsrsConfig.Companion.Default|{}Default[0]
+            final fun <get-Default>(): io.github.meko123456.srs/FsrsConfig // io.github.meko123456.srs/FsrsConfig.Companion.Default.<get-Default>|<get-Default>(){}[0]
+    }
+}
+
+final class io.github.meko123456.srs/FsrsState { // io.github.meko123456.srs/FsrsState|null[0]
+    constructor <init>(kotlin/Double = ..., kotlin/Double = ..., kotlin/Int = ..., kotlin/Int = ...) // io.github.meko123456.srs/FsrsState.<init>|<init>(kotlin.Double;kotlin.Double;kotlin.Int;kotlin.Int){}[0]
+
+    final val difficulty // io.github.meko123456.srs/FsrsState.difficulty|{}difficulty[0]
+        final fun <get-difficulty>(): kotlin/Double // io.github.meko123456.srs/FsrsState.difficulty.<get-difficulty>|<get-difficulty>(){}[0]
+    final val isNew // io.github.meko123456.srs/FsrsState.isNew|{}isNew[0]
+        final fun <get-isNew>(): kotlin/Boolean // io.github.meko123456.srs/FsrsState.isNew.<get-isNew>|<get-isNew>(){}[0]
+    final val lapses // io.github.meko123456.srs/FsrsState.lapses|{}lapses[0]
+        final fun <get-lapses>(): kotlin/Int // io.github.meko123456.srs/FsrsState.lapses.<get-lapses>|<get-lapses>(){}[0]
+    final val repetitions // io.github.meko123456.srs/FsrsState.repetitions|{}repetitions[0]
+        final fun <get-repetitions>(): kotlin/Int // io.github.meko123456.srs/FsrsState.repetitions.<get-repetitions>|<get-repetitions>(){}[0]
+    final val stabilityDays // io.github.meko123456.srs/FsrsState.stabilityDays|{}stabilityDays[0]
+        final fun <get-stabilityDays>(): kotlin/Double // io.github.meko123456.srs/FsrsState.stabilityDays.<get-stabilityDays>|<get-stabilityDays>(){}[0]
+
+    final fun component1(): kotlin/Double // io.github.meko123456.srs/FsrsState.component1|component1(){}[0]
+    final fun component2(): kotlin/Double // io.github.meko123456.srs/FsrsState.component2|component2(){}[0]
+    final fun component3(): kotlin/Int // io.github.meko123456.srs/FsrsState.component3|component3(){}[0]
+    final fun component4(): kotlin/Int // io.github.meko123456.srs/FsrsState.component4|component4(){}[0]
+    final fun copy(kotlin/Double = ..., kotlin/Double = ..., kotlin/Int = ..., kotlin/Int = ...): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/FsrsState.copy|copy(kotlin.Double;kotlin.Double;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/FsrsState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/FsrsState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.meko123456.srs/FsrsState.toString|toString(){}[0]
 }
 
 final class io.github.meko123456.srs/LearningConfig { // io.github.meko123456.srs/LearningConfig|null[0]
@@ -183,22 +283,6 @@ final class io.github.meko123456.srs/LearningState { // io.github.meko123456.srs
     final fun toString(): kotlin/String // io.github.meko123456.srs/LearningState.toString|toString(){}[0]
 }
 
-final class io.github.meko123456.srs/Review { // io.github.meko123456.srs/Review|null[0]
-    constructor <init>(io.github.meko123456.srs/ReviewState = ..., kotlin/Long = ...) // io.github.meko123456.srs/Review.<init>|<init>(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
-
-    final val lastReviewedEpochDay // io.github.meko123456.srs/Review.lastReviewedEpochDay|{}lastReviewedEpochDay[0]
-        final fun <get-lastReviewedEpochDay>(): kotlin/Long // io.github.meko123456.srs/Review.lastReviewedEpochDay.<get-lastReviewedEpochDay>|<get-lastReviewedEpochDay>(){}[0]
-    final val state // io.github.meko123456.srs/Review.state|{}state[0]
-        final fun <get-state>(): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Review.state.<get-state>|<get-state>(){}[0]
-
-    final fun component1(): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Review.component1|component1(){}[0]
-    final fun component2(): kotlin/Long // io.github.meko123456.srs/Review.component2|component2(){}[0]
-    final fun copy(io.github.meko123456.srs/ReviewState = ..., kotlin/Long = ...): io.github.meko123456.srs/Review // io.github.meko123456.srs/Review.copy|copy(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
-    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.meko123456.srs/Review.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // io.github.meko123456.srs/Review.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // io.github.meko123456.srs/Review.toString|toString(){}[0]
-}
-
 final class io.github.meko123456.srs/ReviewState { // io.github.meko123456.srs/ReviewState|null[0]
     constructor <init>(kotlin/Int = ..., kotlin/Long = ..., kotlin/Double = ..., kotlin/Int = ...) // io.github.meko123456.srs/ReviewState.<init>|<init>(kotlin.Int;kotlin.Long;kotlin.Double;kotlin.Int){}[0]
 
@@ -228,20 +312,24 @@ final class io.github.meko123456.srs/ReviewState { // io.github.meko123456.srs/R
     }
 }
 
-final class io.github.meko123456.srs/Sm2 : io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Sm2|null[0]
+final class io.github.meko123456.srs/Sm2 : io.github.meko123456.srs/Scheduler<io.github.meko123456.srs/ReviewState> { // io.github.meko123456.srs/Sm2|null[0]
     constructor <init>(io.github.meko123456.srs/Sm2Config = ...) // io.github.meko123456.srs/Sm2.<init>|<init>(io.github.meko123456.srs.Sm2Config){}[0]
 
     final val config // io.github.meko123456.srs/Sm2.config|{}config[0]
         final fun <get-config>(): io.github.meko123456.srs/Sm2Config // io.github.meko123456.srs/Sm2.config.<get-config>|<get-config>(){}[0]
 
     final fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Sm2.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
+    final fun initial(): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.initial|initial(){}[0]
     final fun isLeech(io.github.meko123456.srs/ReviewState): kotlin/Boolean // io.github.meko123456.srs/Sm2.isLeech|isLeech(io.github.meko123456.srs.ReviewState){}[0]
-    final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
+    final fun isNew(io.github.meko123456.srs/ReviewState): kotlin/Boolean // io.github.meko123456.srs/Sm2.isNew|isNew(io.github.meko123456.srs.ReviewState){}[0]
+    final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
 
-    final object Default : io.github.meko123456.srs/Scheduler { // io.github.meko123456.srs/Sm2.Default|null[0]
+    final object Default : io.github.meko123456.srs/Scheduler<io.github.meko123456.srs/ReviewState> { // io.github.meko123456.srs/Sm2.Default|null[0]
         final fun dueEpochDay(io.github.meko123456.srs/ReviewState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Sm2.Default.dueEpochDay|dueEpochDay(io.github.meko123456.srs.ReviewState;kotlin.Long){}[0]
+        final fun initial(): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.initial|initial(){}[0]
         final fun isDue(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Sm2.Default.isDue|isDue(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
-        final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long){}[0]
+        final fun isNew(io.github.meko123456.srs/ReviewState): kotlin/Boolean // io.github.meko123456.srs/Sm2.Default.isNew|isNew(io.github.meko123456.srs.ReviewState){}[0]
+        final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
     }
 }
 
@@ -291,3 +379,5 @@ final object io.github.meko123456.srs/ItemSeed { // io.github.meko123456.srs/Ite
     final fun of(kotlin/Long): kotlin/Long // io.github.meko123456.srs/ItemSeed.of|of(kotlin.Long){}[0]
     final fun of(kotlin/String): kotlin/Long // io.github.meko123456.srs/ItemSeed.of|of(kotlin.String){}[0]
 }
+
+final fun <#A: kotlin/Any?> io.github.meko123456.srs/ReviewQueue(kotlin/Function1<#A, kotlin/String>): io.github.meko123456.srs/ReviewQueue<#A, io.github.meko123456.srs/ReviewState> // io.github.meko123456.srs/ReviewQueue|ReviewQueue(kotlin.Function1<0:0,kotlin.String>){0§<kotlin.Any?>}[0]

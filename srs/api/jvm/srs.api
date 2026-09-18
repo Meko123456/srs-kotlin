@@ -20,6 +20,89 @@ public final class io/github/meko123456/srs/DailyLimits$Companion {
 	public final fun getNone ()Lio/github/meko123456/srs/DailyLimits;
 }
 
+public final class io/github/meko123456/srs/Fsrs : io/github/meko123456/srs/Scheduler {
+	public static final field DEFAULT_LEECH_THRESHOLD I
+	public static final field Default Lio/github/meko123456/srs/Fsrs$Default;
+	public fun <init> ()V
+	public fun <init> (Lio/github/meko123456/srs/FsrsConfig;)V
+	public synthetic fun <init> (Lio/github/meko123456/srs/FsrsConfig;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun dueEpochDay (Lio/github/meko123456/srs/FsrsState;J)J
+	public synthetic fun dueEpochDay (Ljava/lang/Object;J)J
+	public final fun getConfig ()Lio/github/meko123456/srs/FsrsConfig;
+	public fun initial ()Lio/github/meko123456/srs/FsrsState;
+	public synthetic fun initial ()Ljava/lang/Object;
+	public final fun intervalDays (Lio/github/meko123456/srs/FsrsState;J)J
+	public static synthetic fun intervalDays$default (Lio/github/meko123456/srs/Fsrs;Lio/github/meko123456/srs/FsrsState;JILjava/lang/Object;)J
+	public fun isDue (Lio/github/meko123456/srs/FsrsState;JJ)Z
+	public synthetic fun isDue (Ljava/lang/Object;JJ)Z
+	public final fun isLeech (Lio/github/meko123456/srs/FsrsState;I)Z
+	public static synthetic fun isLeech$default (Lio/github/meko123456/srs/Fsrs;Lio/github/meko123456/srs/FsrsState;IILjava/lang/Object;)Z
+	public fun isNew (Lio/github/meko123456/srs/FsrsState;)Z
+	public synthetic fun isNew (Ljava/lang/Object;)Z
+	public final fun retrievability (JD)D
+	public fun schedule (Lio/github/meko123456/srs/FsrsState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/FsrsState;
+	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+}
+
+public final class io/github/meko123456/srs/Fsrs$Default : io/github/meko123456/srs/Scheduler {
+	public fun dueEpochDay (Lio/github/meko123456/srs/FsrsState;J)J
+	public synthetic fun dueEpochDay (Ljava/lang/Object;J)J
+	public fun initial ()Lio/github/meko123456/srs/FsrsState;
+	public synthetic fun initial ()Ljava/lang/Object;
+	public fun isDue (Lio/github/meko123456/srs/FsrsState;JJ)Z
+	public synthetic fun isDue (Ljava/lang/Object;JJ)Z
+	public fun isNew (Lio/github/meko123456/srs/FsrsState;)Z
+	public synthetic fun isNew (Ljava/lang/Object;)Z
+	public fun schedule (Lio/github/meko123456/srs/FsrsState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/FsrsState;
+	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+}
+
+public final class io/github/meko123456/srs/FsrsConfig {
+	public static final field Companion Lio/github/meko123456/srs/FsrsConfig$Companion;
+	public static final field WEIGHT_COUNT I
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;DJD)V
+	public synthetic fun <init> (Ljava/util/List;DJDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()D
+	public final fun component3 ()J
+	public final fun component4 ()D
+	public final fun copy (Ljava/util/List;DJD)Lio/github/meko123456/srs/FsrsConfig;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/FsrsConfig;Ljava/util/List;DJDILjava/lang/Object;)Lio/github/meko123456/srs/FsrsConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFuzzFactor ()D
+	public final fun getMaximumIntervalDays ()J
+	public final fun getRequestRetention ()D
+	public final fun getWeights ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/meko123456/srs/FsrsConfig$Companion {
+	public final fun getDEFAULT_WEIGHTS ()Ljava/util/List;
+	public final fun getDefault ()Lio/github/meko123456/srs/FsrsConfig;
+}
+
+public final class io/github/meko123456/srs/FsrsState {
+	public fun <init> ()V
+	public fun <init> (DDII)V
+	public synthetic fun <init> (DDIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()D
+	public final fun component2 ()D
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (DDII)Lio/github/meko123456/srs/FsrsState;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/FsrsState;DDIIILjava/lang/Object;)Lio/github/meko123456/srs/FsrsState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDifficulty ()D
+	public final fun getLapses ()I
+	public final fun getRepetitions ()I
+	public final fun getStabilityDays ()D
+	public fun hashCode ()I
+	public final fun isNew ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/github/meko123456/srs/Grade : java/lang/Enum {
 	public static final field AGAIN Lio/github/meko123456/srs/Grade;
 	public static final field Companion Lio/github/meko123456/srs/Grade$Companion;
@@ -124,29 +207,31 @@ public final class io/github/meko123456/srs/LearningState {
 }
 
 public final class io/github/meko123456/srs/Review {
-	public fun <init> ()V
-	public fun <init> (Lio/github/meko123456/srs/ReviewState;J)V
-	public synthetic fun <init> (Lio/github/meko123456/srs/ReviewState;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lio/github/meko123456/srs/ReviewState;
+	public fun <init> (Ljava/lang/Object;J)V
+	public synthetic fun <init> (Ljava/lang/Object;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
 	public final fun component2 ()J
-	public final fun copy (Lio/github/meko123456/srs/ReviewState;J)Lio/github/meko123456/srs/Review;
-	public static synthetic fun copy$default (Lio/github/meko123456/srs/Review;Lio/github/meko123456/srs/ReviewState;JILjava/lang/Object;)Lio/github/meko123456/srs/Review;
+	public final fun copy (Ljava/lang/Object;J)Lio/github/meko123456/srs/Review;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/Review;Ljava/lang/Object;JILjava/lang/Object;)Lio/github/meko123456/srs/Review;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getLastReviewedEpochDay ()J
-	public final fun getState ()Lio/github/meko123456/srs/ReviewState;
+	public final fun getState ()Ljava/lang/Object;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/meko123456/srs/ReviewQueue {
 	public fun <init> (Lkotlin/jvm/functions/Function1;Lio/github/meko123456/srs/Scheduler;)V
-	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lio/github/meko123456/srs/Scheduler;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun due (Ljava/util/List;Ljava/util/Map;J)Ljava/util/List;
 	public final fun dueCount (Ljava/util/List;Ljava/util/Map;J)I
 	public final fun nextDueEpochDay (Ljava/util/List;Ljava/util/Map;)Ljava/lang/Long;
 	public final fun record (Ljava/lang/Object;Lio/github/meko123456/srs/Review;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/Review;
 	public final fun session (Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;)Lio/github/meko123456/srs/StudySession;
 	public static synthetic fun session$default (Lio/github/meko123456/srs/ReviewQueue;Ljava/util/List;Ljava/util/Map;JLio/github/meko123456/srs/DailyLimits;ILjava/lang/Object;)Lio/github/meko123456/srs/StudySession;
+}
+
+public final class io/github/meko123456/srs/ReviewQueueKt {
+	public static final fun ReviewQueue (Lkotlin/jvm/functions/Function1;)Lio/github/meko123456/srs/ReviewQueue;
 }
 
 public final class io/github/meko123456/srs/ReviewState {
@@ -177,10 +262,12 @@ public final class io/github/meko123456/srs/ReviewState$Companion {
 public abstract interface class io/github/meko123456/srs/Scheduler {
 	public static final field Companion Lio/github/meko123456/srs/Scheduler$Companion;
 	public static final field NO_SEED J
-	public abstract fun dueEpochDay (Lio/github/meko123456/srs/ReviewState;J)J
-	public fun isDue (Lio/github/meko123456/srs/ReviewState;JJ)Z
-	public abstract fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/ReviewState;
-	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JILjava/lang/Object;)Lio/github/meko123456/srs/ReviewState;
+	public abstract fun dueEpochDay (Ljava/lang/Object;J)J
+	public abstract fun initial ()Ljava/lang/Object;
+	public fun isDue (Ljava/lang/Object;JJ)Z
+	public abstract fun isNew (Ljava/lang/Object;)Z
+	public abstract fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class io/github/meko123456/srs/Scheduler$Companion {
@@ -188,8 +275,8 @@ public final class io/github/meko123456/srs/Scheduler$Companion {
 }
 
 public final class io/github/meko123456/srs/Scheduler$DefaultImpls {
-	public static fun isDue (Lio/github/meko123456/srs/Scheduler;Lio/github/meko123456/srs/ReviewState;JJ)Z
-	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JILjava/lang/Object;)Lio/github/meko123456/srs/ReviewState;
+	public static fun isDue (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;JJ)Z
+	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class io/github/meko123456/srs/Sm2 : io/github/meko123456/srs/Scheduler {
@@ -198,16 +285,30 @@ public final class io/github/meko123456/srs/Sm2 : io/github/meko123456/srs/Sched
 	public fun <init> (Lio/github/meko123456/srs/Sm2Config;)V
 	public synthetic fun <init> (Lio/github/meko123456/srs/Sm2Config;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun dueEpochDay (Lio/github/meko123456/srs/ReviewState;J)J
+	public synthetic fun dueEpochDay (Ljava/lang/Object;J)J
 	public final fun getConfig ()Lio/github/meko123456/srs/Sm2Config;
+	public fun initial ()Lio/github/meko123456/srs/ReviewState;
+	public synthetic fun initial ()Ljava/lang/Object;
 	public fun isDue (Lio/github/meko123456/srs/ReviewState;JJ)Z
+	public synthetic fun isDue (Ljava/lang/Object;JJ)Z
 	public final fun isLeech (Lio/github/meko123456/srs/ReviewState;)Z
-	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/ReviewState;
+	public fun isNew (Lio/github/meko123456/srs/ReviewState;)Z
+	public synthetic fun isNew (Ljava/lang/Object;)Z
+	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/ReviewState;
+	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
 }
 
 public final class io/github/meko123456/srs/Sm2$Default : io/github/meko123456/srs/Scheduler {
 	public fun dueEpochDay (Lio/github/meko123456/srs/ReviewState;J)J
+	public synthetic fun dueEpochDay (Ljava/lang/Object;J)J
+	public fun initial ()Lio/github/meko123456/srs/ReviewState;
+	public synthetic fun initial ()Ljava/lang/Object;
 	public fun isDue (Lio/github/meko123456/srs/ReviewState;JJ)Z
-	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;J)Lio/github/meko123456/srs/ReviewState;
+	public synthetic fun isDue (Ljava/lang/Object;JJ)Z
+	public fun isNew (Lio/github/meko123456/srs/ReviewState;)Z
+	public synthetic fun isNew (Ljava/lang/Object;)Z
+	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/ReviewState;
+	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
 }
 
 public final class io/github/meko123456/srs/Sm2Config {
