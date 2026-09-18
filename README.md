@@ -4,8 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![API docs](https://img.shields.io/badge/API-docs-blue.svg)](https://meko123456.github.io/srs-kotlin/)
 
-Spaced-repetition scheduling for Kotlin Multiplatform: a configurable, exhaustively tested **SM-2**
-implementation with **no dependencies**.
+Spaced-repetition scheduling for Kotlin Multiplatform: configurable, exhaustively tested **SM-2** and
+**FSRS** implementations with **no dependencies**.
 
 It answers the two questions a review screen actually has — *what should I study now*, and *what do
 I write down when the answer comes back* — and stays out of everything else. No database, no clock,
@@ -234,15 +234,62 @@ if (sm2.isLeech(state)) { /* suspend it, tag it, split it in two */ }
 This is reporting only. Nothing in the library changes behaviour for a leech; what to do about one is
 your call.
 
+## FSRS
+
+FSRS is SM-2's successor and what Anki now defaults to. Swapping to it is one argument:
+
+```kotlin
+val queue = ReviewQueue(Card::id, Fsrs())
+```
+
+Where SM-2 stores an interval and multiplies it by an ease factor, FSRS stores a model of your
+memory — a **stability** in days and a **difficulty** — and *derives* the interval by asking when
+recall would fall to the retention you asked for. Two things follow from that, and they are the
+reason to prefer it:
+
+**It knows how late you were.** Recalling something three weeks after it was due is far stronger
+evidence than recalling it on the day. FSRS credits that; SM-2 has no term for it and treats the two
+identically. Both facts are pinned by tests.
+
+**Retention is a dial rather than an accident.** With SM-2 the retention you end up with is whatever
+your ease factors happen to produce. Here you set it:
+
+```kotlin
+Fsrs(FsrsConfig(requestRetention = 0.95))   // shorter intervals, fewer forgotten
+```
+
+`FsrsConfig` also exposes all nineteen FSRS-5 weights. They default to the published reference values,
+which is what you use before you have enough of somebody's own history to fit better ones. Fitting
+them is a data problem rather than a scheduling one, so it is not in this library — but the seam for
+it is right there.
+
+Stability is in days and means something you can read: an item with a stability of 30 is one you
+would half-expect to have lost in about a month. `retrievability(elapsedDays, stability)` gives the
+probability it is still there, which is what you want for sorting a backlog by what is closest to
+being forgotten.
+
+**What is and is not claimed.** This is an independent implementation of the published FSRS-5
+formulas. Its behaviour is tested — stability grows on success and never on a lapse, difficulty moves
+the right way and stays in range, a nearly-failed review teaches more than an easy one, intervals move
+monotonically with requested retention — but it has **not** been checked value-for-value against
+Anki's implementation, and it does not claim to schedule identically.
+
 ## Using another algorithm
 
-`Sm2` implements [`Scheduler`](srs/src/commonMain/kotlin/io/github/meko123456/srs/Scheduler.kt), and
-`ReviewQueue` takes any `Scheduler`. Leitner boxes, a fixed ladder or FSRS slot in without the review
-screen noticing:
+`Sm2` and `Fsrs` both implement
+[`Scheduler`](srs/src/commonMain/kotlin/io/github/meko123456/srs/Scheduler.kt), and `ReviewQueue`
+takes any of them. Leitner boxes or a fixed ladder slot in without the review screen noticing:
 
 ```kotlin
 val queue = ReviewQueue(Card::id, scheduler = MyOwnScheduler())
 ```
+
+`Scheduler` is generic over the state it keeps, because the algorithms genuinely disagree about what
+an item's history *is* — SM-2 remembers repetitions, an interval and an ease factor; FSRS remembers
+stability and difficulty and has no concept of ease. A single state type would have to be the union
+of both and would invite a caller to read a field that means nothing to the algorithm running. The
+type is inferred from the scheduler, so `ReviewQueue(Card::id, Fsrs())` needs no type arguments
+written out, and `Review<FsrsState>` is what comes back.
 
 Implementations must be pure — same inputs, same outputs, no clock reads.
 
@@ -277,9 +324,11 @@ rather than producing silently wrong intervals later.
 |---|---|
 | `Grade` | `AGAIN` / `HARD` / `GOOD` / `EASY`, mapped onto SM-2's 0–5 quality scale |
 | `ReviewState` | One item's history: repetitions, interval, ease, lapses |
-| `Review` | A `ReviewState` plus the epoch day it was last seen |
-| `Scheduler` | The algorithm interface |
+| `Review<S>` | An item's state plus the epoch day it was last seen |
+| `Scheduler<S>` | The algorithm interface, generic over the state the algorithm keeps |
 | `Sm2` / `Sm2Config` | SM-2 and its knobs |
+| `Fsrs` / `FsrsConfig` | FSRS-5 and its knobs, including all nineteen weights |
+| `FsrsState` | One item under FSRS: stability in days, difficulty, repetitions, lapses |
 | `ItemSeed` | Turns an item id into the stable seed interval spreading uses |
 | `LearningQueue` / `LearningConfig` | The sub-day steps a new item walks before the scheduler takes over |
 | `LearningState` / `LearningOutcome` | Where an item is in those steps, and what a review did to it |
