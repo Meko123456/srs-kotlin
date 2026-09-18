@@ -21,7 +21,6 @@ public final class io/github/meko123456/srs/DailyLimits$Companion {
 }
 
 public final class io/github/meko123456/srs/Fsrs : io/github/meko123456/srs/Scheduler {
-	public static final field DEFAULT_LEECH_THRESHOLD I
 	public static final field Default Lio/github/meko123456/srs/Fsrs$Default;
 	public fun <init> ()V
 	public fun <init> (Lio/github/meko123456/srs/FsrsConfig;)V
@@ -35,8 +34,7 @@ public final class io/github/meko123456/srs/Fsrs : io/github/meko123456/srs/Sche
 	public static synthetic fun intervalDays$default (Lio/github/meko123456/srs/Fsrs;Lio/github/meko123456/srs/FsrsState;JILjava/lang/Object;)J
 	public fun isDue (Lio/github/meko123456/srs/FsrsState;JJ)Z
 	public synthetic fun isDue (Ljava/lang/Object;JJ)Z
-	public final fun isLeech (Lio/github/meko123456/srs/FsrsState;I)Z
-	public static synthetic fun isLeech$default (Lio/github/meko123456/srs/Fsrs;Lio/github/meko123456/srs/FsrsState;IILjava/lang/Object;)Z
+	public final fun isLeech (Lio/github/meko123456/srs/FsrsState;)Z
 	public fun isNew (Lio/github/meko123456/srs/FsrsState;)Z
 	public synthetic fun isNew (Ljava/lang/Object;)Z
 	public final fun retrievability (JD)D
@@ -61,17 +59,19 @@ public final class io/github/meko123456/srs/FsrsConfig {
 	public static final field Companion Lio/github/meko123456/srs/FsrsConfig$Companion;
 	public static final field WEIGHT_COUNT I
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;DJD)V
-	public synthetic fun <init> (Ljava/util/List;DJDILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;DJDI)V
+	public synthetic fun <init> (Ljava/util/List;DJDIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()D
 	public final fun component3 ()J
 	public final fun component4 ()D
-	public final fun copy (Ljava/util/List;DJD)Lio/github/meko123456/srs/FsrsConfig;
-	public static synthetic fun copy$default (Lio/github/meko123456/srs/FsrsConfig;Ljava/util/List;DJDILjava/lang/Object;)Lio/github/meko123456/srs/FsrsConfig;
+	public final fun component5 ()I
+	public final fun copy (Ljava/util/List;DJDI)Lio/github/meko123456/srs/FsrsConfig;
+	public static synthetic fun copy$default (Lio/github/meko123456/srs/FsrsConfig;Ljava/util/List;DJDIILjava/lang/Object;)Lio/github/meko123456/srs/FsrsConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFuzzFactor ()D
-	public final fun getMaximumIntervalDays ()J
+	public final fun getLeechThreshold ()I
+	public final fun getMaxIntervalDays ()J
 	public final fun getRequestRetention ()D
 	public final fun getWeights ()Ljava/util/List;
 	public fun hashCode ()I

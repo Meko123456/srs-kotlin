@@ -161,7 +161,7 @@ class FsrsTest {
 
     @Test
     fun theCeilingHolds() {
-        val capped = Fsrs(FsrsConfig(maximumIntervalDays = 30))
+        val capped = Fsrs(FsrsConfig(maxIntervalDays = 30))
         assertEquals(30L, capped.intervalDays(settled(stability = 5_000.0)))
     }
 
@@ -225,6 +225,15 @@ class FsrsTest {
     fun leechesAreReportedNotActedOn() {
         assertTrue(fsrs.isLeech(FsrsState(stabilityDays = 1.0, difficulty = 9.0, lapses = 8)))
         assertTrue(!fsrs.isLeech(FsrsState(stabilityDays = 1.0, difficulty = 9.0, lapses = 7)))
+    }
+
+    @Test
+    fun theLeechThresholdIsConfigurableInTheSamePlaceSm2PutsIt() {
+        val strict = Fsrs(FsrsConfig(leechThreshold = 3))
+        assertTrue(strict.isLeech(FsrsState(stabilityDays = 1.0, difficulty = 9.0, lapses = 3)))
+        assertTrue(!strict.isLeech(FsrsState(stabilityDays = 1.0, difficulty = 9.0, lapses = 2)))
+        assertEquals(Sm2Config().leechThreshold, FsrsConfig().leechThreshold, "the defaults should agree")
+        assertFailsWith<IllegalArgumentException> { FsrsConfig(leechThreshold = 0) }
     }
 
     // ───────── validation ─────────

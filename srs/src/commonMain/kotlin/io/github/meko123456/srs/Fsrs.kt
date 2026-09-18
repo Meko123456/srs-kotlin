@@ -71,7 +71,7 @@ public data class FsrsConfig(
      */
     public val requestRetention: Double = 0.9,
     /** Upper bound on any interval, defaulting to a hundred years — effectively none. */
-    public val maximumIntervalDays: Long = 36_500,
+    public val maxIntervalDays: Long = 36_500,
     /**
      * How far an interval may be moved to stop items clumping, as a fraction of that interval.
      *
@@ -79,6 +79,15 @@ public data class FsrsConfig(
      * a deterministic spread derived from the item's seed. See that field for why it exists.
      */
     public val fuzzFactor: Double = 0.0,
+    /**
+     * Lapses at which an item is considered a leech — one that keeps being forgotten and is usually
+     * better rewritten than re-reviewed. Reported by [Fsrs.isLeech]; the library never acts on it.
+     *
+     * Here rather than as an argument to [Fsrs.isLeech] so it sits where [Sm2Config.leechThreshold]
+     * does. A caller configuring the two schedulers should not have to learn that one takes its
+     * threshold from config and the other from the call.
+     */
+    public val leechThreshold: Int = 8,
 ) {
     init {
         require(weights.size == WEIGHT_COUNT) {
@@ -87,8 +96,9 @@ public data class FsrsConfig(
         require(requestRetention > 0.0 && requestRetention < 1.0) {
             "requestRetention must be between 0 and 1 exclusive, was $requestRetention"
         }
-        require(maximumIntervalDays >= 1) { "maximumIntervalDays must be at least 1, was $maximumIntervalDays" }
+        require(maxIntervalDays >= 1) { "maxIntervalDays must be at least 1, was $maxIntervalDays" }
         require(fuzzFactor >= 0.0 && fuzzFactor < 1.0) { "fuzzFactor must be in [0, 1), was $fuzzFactor" }
+        require(leechThreshold >= 1) { "leechThreshold must be at least 1, was $leechThreshold" }
     }
 
     public companion object {
@@ -209,8 +219,8 @@ public class Fsrs(
         if (state.isNew) return 0
         val raw = state.stabilityDays / FACTOR *
             (config.requestRetention.pow(1.0 / DECAY) - 1.0)
-        val days = raw.roundToLong().coerceIn(1L, config.maximumIntervalDays)
-        return IntervalSpread.apply(days, itemSeed, config.fuzzFactor, config.maximumIntervalDays)
+        val days = raw.roundToLong().coerceIn(1L, config.maxIntervalDays)
+        return IntervalSpread.apply(days, itemSeed, config.fuzzFactor, config.maxIntervalDays)
     }
 
     /**
@@ -230,8 +240,7 @@ public class Fsrs(
      *
      * Reporting only, exactly as [Sm2.isLeech] is. What to do about a leech is the app's call.
      */
-    public fun isLeech(state: FsrsState, threshold: Int = DEFAULT_LEECH_THRESHOLD): Boolean =
-        state.lapses >= threshold
+    public fun isLeech(state: FsrsState): Boolean = state.lapses >= config.leechThreshold
 
     // ───────── the model ─────────
 
@@ -280,7 +289,7 @@ public class Fsrs(
             hardPenalty *
             easyBonus
         return (stability * (1.0 + growth))
-            .coerceIn(MIN_STABILITY, config.maximumIntervalDays.toDouble())
+            .coerceIn(MIN_STABILITY, config.maxIntervalDays.toDouble())
     }
 
     /**
@@ -324,8 +333,5 @@ public class Fsrs(
         private const val MAX_DIFFICULTY: Double = 10.0
         private const val HARD_RATING: Int = 2
         private const val EASY_RATING: Int = 4
-
-        /** Lapses before [isLeech] reports true, matching [Sm2Config.leechThreshold]. */
-        public const val DEFAULT_LEECH_THRESHOLD: Int = 8
     }
 }
