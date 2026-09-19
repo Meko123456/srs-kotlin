@@ -216,15 +216,17 @@ Reviews and new items have **separate budgets**, because they fail differently: 
 means forgetting something already learned, while skipping a new item means learning it tomorrow
 instead. A wall of due reviews therefore never stops new material appearing, and a large import never
 pushes out the reviews that are the reason the app works. Within the review budget the **most
-overdue survive**, on the reasoning that lateness is the best available stand-in for risk of
-forgetting.
+**most urgent survive** — the ones closest to being forgotten.
 
-That reasoning is exactly true under SM-2 and only roughly true under FSRS, which models recall
-directly and can therefore disagree: a three-day item two days late is in far more danger than a
-two-hundred-day item ten days late, and lateness ranks them the wrong way round. It only bites when
-a daily cap is actually cutting items, and changing the ordering would change the `Scheduler`
-interface, so it is written down as [#15](https://github.com/Meko123456/srs-kotlin/issues/15) rather
-than quietly left implied.
+What "urgent" means is the scheduler's own answer. `Scheduler.urgency` defaults to **days overdue**,
+because lateness is the best stand-in for risk available to an algorithm with no model of memory,
+and that default is exactly what the queue sorted by before the method existed. SM-2 and any custom
+scheduler are therefore unaffected.
+
+FSRS overrides it with one minus retrievability, because it does have a model and the two genuinely
+disagree: a three-day item two days late is near 70% recall while a two-hundred-day item ten days
+late is still above 97%, and lateness ranks those the wrong way round. It only changes anything when
+a cap is actually cutting items, which is precisely when getting it wrong is expensive.
 
 `remainingAfter` exists because the library cannot know what you studied before it was asked, and
 because the two easy ways to get that subtraction wrong are both handled: `UNLIMITED` stays unlimited
@@ -337,6 +339,7 @@ rather than producing silently wrong intervals later.
 | `ReviewState` | One item's history: repetitions, interval, ease, lapses |
 | `Review<S>` | An item's state plus the epoch day it was last seen |
 | `Scheduler<S>` | The algorithm interface, generic over the state the algorithm keeps |
+| `Scheduler.urgency` | How the daily cap ranks items; days overdue unless the algorithm knows better |
 | `Sm2` / `Sm2Config` | SM-2 and its knobs |
 | `Fsrs` / `FsrsConfig` | FSRS-5 and its knobs, including all nineteen weights |
 | `FsrsState` | One item under FSRS: stability in days, difficulty, repetitions, lapses |

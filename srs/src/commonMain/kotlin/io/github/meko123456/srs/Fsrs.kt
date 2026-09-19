@@ -206,6 +206,22 @@ public class Fsrs(
         )
     }
 
+    /**
+     * How likely this item is to be *forgotten* right now: one minus its retrievability.
+     *
+     * This is the difference the interface's default cannot express. Lateness says a
+     * two-hundred-day item ten days overdue is in more trouble than a three-day item two days
+     * overdue, because ten is bigger than two. The forgetting curve says the opposite, and it is
+     * right — the first is still above 97% recall and the second is near 70%.
+     *
+     * It only changes anything when a daily cap is actually cutting items, which is exactly when
+     * getting it wrong is expensive.
+     */
+    override fun urgency(state: FsrsState, lastReviewedEpochDay: Long, todayEpochDay: Long): Double {
+        if (state.isNew) return 1.0
+        return 1.0 - retrievability(todayEpochDay - lastReviewedEpochDay, state.stabilityDays)
+    }
+
     override fun dueEpochDay(state: FsrsState, lastReviewedEpochDay: Long): Long =
         lastReviewedEpochDay + intervalDays(state)
 

@@ -53,13 +53,11 @@ public class ReviewQueue<T, S>(
      * Reviews and new items are capped against their own budgets rather than a shared one, so a
      * backlog of due reviews never silently stops new material appearing, and a large import never
      * pushes out the reviews that are the reason the app works. Within the review budget the
-     * *most overdue* survive, on the reasoning that lateness is the best available stand-in for risk
-     * of forgetting.
-     *
-     * That is exactly right under [Sm2] and only roughly right under [Fsrs], which models recall
-     * directly and can disagree — a three-day item two days late is in more danger than a
-     * two-hundred-day item ten days late. It only matters when a cap is actually cutting items, and
-     * fixing it would change [Scheduler], so it is tracked rather than assumed away.
+     * *most urgent* survive — the ones closest to being forgotten, as judged by
+     * [Scheduler.urgency]. That defaults to days overdue, which is what this sorted by before the
+     * method existed, so nothing changes for a scheduler without a model of memory. [Fsrs] has one
+     * and overrides it, because lateness ranks a three-day item two days late below a
+     * two-hundred-day item ten days late, and the forgetting curve says the opposite.
      *
      * [DailyLimits.remainingAfter] turns a day's settings into the limits for this call, given what
      * has already been studied — the library has no idea what happened before it was asked.
@@ -79,20 +77,27 @@ public class ReviewQueue<T, S>(
         limits: DailyLimits = DailyLimits.None,
     ): StudySession<T> {
         val fresh = mutableListOf<T>()
-        val scheduled = mutableListOf<Pair<T, Long>>()
+        val scheduled = mutableListOf<Pair<T, Double>>()
 
         for (item in items) {
             val review = reviews[idOf(item)]
             when {
                 isNew(review) -> fresh += item
                 isDue(review, todayEpochDay) ->
-                    scheduled += item to scheduler.dueEpochDay(review!!.state, review.lastReviewedEpochDay)
+                    scheduled += item to scheduler.urgency(
+                        review!!.state,
+                        review.lastReviewedEpochDay,
+                        todayEpochDay,
+                    )
                 else -> Unit
             }
         }
 
-        // sortedBy is stable, so items tied on due day keep the order they arrived in.
-        val chosenReviews = scheduled.sortedBy { (_, dueOn) -> dueOn }
+        // sortedByDescending is stable, so items of equal urgency keep the order they arrived in.
+        // With the interface's default urgency this is identical to sorting by due day, because
+        // that default *is* days overdue — so nothing changes for a scheduler that does not
+        // override it.
+        val chosenReviews = scheduled.sortedByDescending { (_, urgency) -> urgency }
             .take(limits.maxReviews)
             .map { (item, _) -> item }
 

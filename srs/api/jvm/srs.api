@@ -40,6 +40,8 @@ public final class io/github/meko123456/srs/Fsrs : io/github/meko123456/srs/Sche
 	public final fun retrievability (JD)D
 	public fun schedule (Lio/github/meko123456/srs/FsrsState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/FsrsState;
 	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+	public fun urgency (Lio/github/meko123456/srs/FsrsState;JJ)D
+	public synthetic fun urgency (Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/Fsrs$Default : io/github/meko123456/srs/Scheduler {
@@ -53,6 +55,8 @@ public final class io/github/meko123456/srs/Fsrs$Default : io/github/meko123456/
 	public synthetic fun isNew (Ljava/lang/Object;)Z
 	public fun schedule (Lio/github/meko123456/srs/FsrsState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/FsrsState;
 	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+	public fun urgency (Lio/github/meko123456/srs/FsrsState;JJ)D
+	public synthetic fun urgency (Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/FsrsConfig {
@@ -268,6 +272,7 @@ public abstract interface class io/github/meko123456/srs/Scheduler {
 	public abstract fun isNew (Ljava/lang/Object;)Z
 	public abstract fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
 	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJILjava/lang/Object;)Ljava/lang/Object;
+	public fun urgency (Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/Scheduler$Companion {
@@ -277,6 +282,7 @@ public final class io/github/meko123456/srs/Scheduler$Companion {
 public final class io/github/meko123456/srs/Scheduler$DefaultImpls {
 	public static fun isDue (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;JJ)Z
 	public static synthetic fun schedule$default (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJILjava/lang/Object;)Ljava/lang/Object;
+	public static fun urgency (Lio/github/meko123456/srs/Scheduler;Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/Sm2 : io/github/meko123456/srs/Scheduler {
@@ -296,6 +302,8 @@ public final class io/github/meko123456/srs/Sm2 : io/github/meko123456/srs/Sched
 	public synthetic fun isNew (Ljava/lang/Object;)Z
 	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/ReviewState;
 	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+	public fun urgency (Lio/github/meko123456/srs/ReviewState;JJ)D
+	public synthetic fun urgency (Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/Sm2$Default : io/github/meko123456/srs/Scheduler {
@@ -309,6 +317,8 @@ public final class io/github/meko123456/srs/Sm2$Default : io/github/meko123456/s
 	public synthetic fun isNew (Ljava/lang/Object;)Z
 	public fun schedule (Lio/github/meko123456/srs/ReviewState;Lio/github/meko123456/srs/Grade;JJ)Lio/github/meko123456/srs/ReviewState;
 	public synthetic fun schedule (Ljava/lang/Object;Lio/github/meko123456/srs/Grade;JJ)Ljava/lang/Object;
+	public fun urgency (Lio/github/meko123456/srs/ReviewState;JJ)D
+	public synthetic fun urgency (Ljava/lang/Object;JJ)D
 }
 
 public final class io/github/meko123456/srs/Sm2Config {

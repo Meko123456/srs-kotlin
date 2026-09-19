@@ -34,6 +34,7 @@ abstract interface <#A: kotlin/Any?> io.github.meko123456.srs/Scheduler { // io.
     abstract fun isNew(#A): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isNew|isNew(1:0){}[0]
     abstract fun schedule(#A, io.github.meko123456.srs/Grade, kotlin/Long = ..., kotlin/Long = ...): #A // io.github.meko123456.srs/Scheduler.schedule|schedule(1:0;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
     open fun isDue(#A, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Scheduler.isDue|isDue(1:0;kotlin.Long;kotlin.Long){}[0]
+    open fun urgency(#A, kotlin/Long, kotlin/Long): kotlin/Double // io.github.meko123456.srs/Scheduler.urgency|urgency(1:0;kotlin.Long;kotlin.Long){}[0]
 
     final object Companion { // io.github.meko123456.srs/Scheduler.Companion|null[0]
         final const val NO_SEED // io.github.meko123456.srs/Scheduler.Companion.NO_SEED|{}NO_SEED[0]
@@ -152,6 +153,7 @@ final class io.github.meko123456.srs/Fsrs : io.github.meko123456.srs/Scheduler<i
     final fun isNew(io.github.meko123456.srs/FsrsState): kotlin/Boolean // io.github.meko123456.srs/Fsrs.isNew|isNew(io.github.meko123456.srs.FsrsState){}[0]
     final fun retrievability(kotlin/Long, kotlin/Double): kotlin/Double // io.github.meko123456.srs/Fsrs.retrievability|retrievability(kotlin.Long;kotlin.Double){}[0]
     final fun schedule(io.github.meko123456.srs/FsrsState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.schedule|schedule(io.github.meko123456.srs.FsrsState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+    final fun urgency(io.github.meko123456.srs/FsrsState, kotlin/Long, kotlin/Long): kotlin/Double // io.github.meko123456.srs/Fsrs.urgency|urgency(io.github.meko123456.srs.FsrsState;kotlin.Long;kotlin.Long){}[0]
 
     final object Default : io.github.meko123456.srs/Scheduler<io.github.meko123456.srs/FsrsState> { // io.github.meko123456.srs/Fsrs.Default|null[0]
         final fun dueEpochDay(io.github.meko123456.srs/FsrsState, kotlin/Long): kotlin/Long // io.github.meko123456.srs/Fsrs.Default.dueEpochDay|dueEpochDay(io.github.meko123456.srs.FsrsState;kotlin.Long){}[0]
@@ -159,6 +161,7 @@ final class io.github.meko123456.srs/Fsrs : io.github.meko123456.srs/Scheduler<i
         final fun isDue(io.github.meko123456.srs/FsrsState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Fsrs.Default.isDue|isDue(io.github.meko123456.srs.FsrsState;kotlin.Long;kotlin.Long){}[0]
         final fun isNew(io.github.meko123456.srs/FsrsState): kotlin/Boolean // io.github.meko123456.srs/Fsrs.Default.isNew|isNew(io.github.meko123456.srs.FsrsState){}[0]
         final fun schedule(io.github.meko123456.srs/FsrsState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/FsrsState // io.github.meko123456.srs/Fsrs.Default.schedule|schedule(io.github.meko123456.srs.FsrsState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+        final fun urgency(io.github.meko123456.srs/FsrsState, kotlin/Long, kotlin/Long): kotlin/Double // io.github.meko123456.srs/Fsrs.Default.urgency|urgency(io.github.meko123456.srs.FsrsState;kotlin.Long;kotlin.Long){}[0]
     }
 }
 
@@ -330,6 +333,7 @@ final class io.github.meko123456.srs/Sm2 : io.github.meko123456.srs/Scheduler<io
         final fun isDue(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Boolean // io.github.meko123456.srs/Sm2.Default.isDue|isDue(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
         final fun isNew(io.github.meko123456.srs/ReviewState): kotlin/Boolean // io.github.meko123456.srs/Sm2.Default.isNew|isNew(io.github.meko123456.srs.ReviewState){}[0]
         final fun schedule(io.github.meko123456.srs/ReviewState, io.github.meko123456.srs/Grade, kotlin/Long, kotlin/Long): io.github.meko123456.srs/ReviewState // io.github.meko123456.srs/Sm2.Default.schedule|schedule(io.github.meko123456.srs.ReviewState;io.github.meko123456.srs.Grade;kotlin.Long;kotlin.Long){}[0]
+        final fun urgency(io.github.meko123456.srs/ReviewState, kotlin/Long, kotlin/Long): kotlin/Double // io.github.meko123456.srs/Sm2.Default.urgency|urgency(io.github.meko123456.srs.ReviewState;kotlin.Long;kotlin.Long){}[0]
     }
 }
 

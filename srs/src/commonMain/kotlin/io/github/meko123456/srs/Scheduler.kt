@@ -101,4 +101,27 @@ public interface Scheduler<S> {
         lastReviewedEpochDay: Long,
         todayEpochDay: Long,
     ): Boolean = isNew(state) || dueEpochDay(state, lastReviewedEpochDay) <= todayEpochDay
+
+    /**
+     * How badly this item needs reviewing today, for deciding what survives when a daily cap cannot
+     * take everything. Higher is more urgent; the unit is the algorithm's own business.
+     *
+     * Only ever used for *ordering*. Nothing compares urgencies from two different schedulers, and
+     * nothing reads the number out, so an implementation is free to return whatever scale makes its
+     * own items rank correctly against each other.
+     *
+     * The default is **days overdue**, which is what [ReviewQueue] sorted by before this existed, so
+     * a scheduler that ignores this method changes nothing at all. That is deliberate: lateness is
+     * the best stand-in for risk available to an algorithm with no model of memory, and inventing a
+     * number for one that has no basis for it would be worse than the honest proxy.
+     *
+     * [Fsrs] overrides it because it does have a model, and there the two genuinely differ: a
+     * three-day item two days late is in far more danger than a two-hundred-day item ten days late,
+     * and lateness ranks those the wrong way round.
+     */
+    public fun urgency(
+        state: S,
+        lastReviewedEpochDay: Long,
+        todayEpochDay: Long,
+    ): Double = (todayEpochDay - dueEpochDay(state, lastReviewedEpochDay)).toDouble()
 }
