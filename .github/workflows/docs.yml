@@ -16,9 +16,13 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Every job has a timeout of about three times its slowest green run (measured October 2026).
+# GitHub's default is six hours, and a job that hangs (a simulator or emulator that never comes
+# up, say) would otherwise hold the run, and keep its log unreadable, for all of them.
 jobs:
   docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
