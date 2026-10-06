@@ -2,8 +2,8 @@
 agp = "9.4.1"
 kotlin = "2.4.20"
 mavenPublish = "0.37.0"
-binaryCompatibilityValidator = "0.18.0"
-dokka = "2.0.0"
+binaryCompatibilityValidator = "0.18.2"
+dokka = "2.2.0"
 
 [plugins]
 android-kmp-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
